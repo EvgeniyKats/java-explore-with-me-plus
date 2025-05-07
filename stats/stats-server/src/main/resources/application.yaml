@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6642/stats
+    url: jdbc:postgresql://localhost:6432/stats
     username: stats
     password: stats
   sql:
@@ -12,6 +12,3 @@ spring:
       mode: always
   h2:
     console.enabled: true
-
-main-service:
-  url: http://localhost:8080
