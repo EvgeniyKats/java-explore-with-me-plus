@@ -12,14 +12,14 @@ import java.util.Set;
 
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query("SELECT new ru.practicum.dto.ViewStatsDto(s.app, s.uri, COUNT(s.ip)) " +
-            "FROM Stats s " +
+    @Query("SELECT s.app, s.uri, COUNT(s.ip) " +
+            "FROM EndpointHit s " +
             "WHERE s.timestamp BETWEEN :start AND :end " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC")
     List<ViewStatsDto> getAllStats(@Param("start") Timestamp start, @Param("end") Timestamp end);
 
-    @Query("SELECT new ViewStatsDto(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
+    @Query("SELECT s.app, s.uri, COUNT(DISTINCT s.ip) " +
             "FROM EndpointHit s " +
             "WHERE s.timestamp BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
