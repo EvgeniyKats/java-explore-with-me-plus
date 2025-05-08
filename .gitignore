@@ -20,6 +20,3 @@ target/
 *.iws
 *.iml
 *.ipr
-
-ewm-stats-service-spec.json
-
