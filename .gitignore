@@ -21,7 +21,5 @@ target/
 *.iml
 *.ipr
 
-# Общие файлы проекта
-build-ewm/
-Explore With Me API Tests/
+ewm-stats-service-spec.json
 
