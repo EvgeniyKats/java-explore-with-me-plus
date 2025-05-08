@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "stats")
@@ -22,5 +22,5 @@ public class EndpointHit {
     String uri;
     String ip;
     @Column(name = "created")
-    LocalDateTime timestamp;
+    Timestamp timestamp;
 }
