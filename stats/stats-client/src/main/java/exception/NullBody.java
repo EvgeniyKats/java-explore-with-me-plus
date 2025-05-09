@@ -2,6 +2,6 @@ package exception;
 
 public class NullBody extends RuntimeException {
     public NullBody() {
-        super();
+        super("Сервер вернул ответ, но тело пустое");
     }
 }
