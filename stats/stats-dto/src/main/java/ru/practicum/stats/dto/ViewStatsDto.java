@@ -6,9 +6,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatDto {
+public class ViewStatsDto {
 
     String app;
     String uri;
