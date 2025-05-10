@@ -1,7 +1,7 @@
 package client;
 
 import exception.RequestException;
-import exception.NullBody;
+import exception.NullBodyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -105,7 +105,7 @@ public class StatsClientRest implements StatsClient {
 
         log.debug("response == null ? {}", response == null);
         if (response == null) {
-            throw new NullBody();
+            throw new NullBodyException();
         }
 
         log.info("Статистика была успешно получена, count = {}", response.size());
