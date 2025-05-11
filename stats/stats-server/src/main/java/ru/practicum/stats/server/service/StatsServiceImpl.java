@@ -1,6 +1,7 @@
 package ru.practicum.stats.server.service;
 
-import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.stats.dto.HitDto;
 import ru.practicum.stats.dto.StatDto;
 import ru.practicum.stats.dto.StatParamDto;
@@ -8,11 +9,13 @@ import ru.practicum.stats.dto.StatParamDto;
 import java.util.ArrayList;
 import java.util.List;
 
-@Primary
+@Transactional(readOnly = true)
+@Service
 public class StatsServiceImpl implements StatsService {
 
     private final StatsRepository statsRepository;
 
+    @Transactional
     @Override
     public void saveHit(HitDto hitDto) {
         statsRepository.save(hitDto);
