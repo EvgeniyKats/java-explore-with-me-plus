@@ -28,8 +28,8 @@ public class StatsController {
     private final StatsService statService;
 
     @GetMapping("/stats")
-    public ResponseEntity<List<ViewStatsDto>> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = "yyyy-MM-dd:HH:mm") LocalDateTime start,
-                                                       @RequestParam(name = "end") @DateTimeFormat(pattern = "yyyy-MM-dd:HH:mm") LocalDateTime end,
+    public ResponseEntity<List<ViewStatsDto>> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                                       @RequestParam(name = "end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                                                        @RequestParam(name = "uris", required = false) List<String> uris,
                                                        @RequestParam(name = "unique", required = false,
                                                                defaultValue = "false") Boolean unique) {
