@@ -8,7 +8,6 @@ import ru.practicum.stats.server.model.EndpointHit;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
@@ -30,7 +29,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
     List<ViewStatsDto> findStatsWithUnique(@Param("start") LocalDateTime start,
                                            @Param("end") LocalDateTime end,
-                                           @Param("uris") Set<String> uris);
+                                           @Param("uris") List<String> uris);
 
     List<EndpointHit> findByUri(String uri);
 

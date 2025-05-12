@@ -11,10 +11,9 @@ import ru.practicum.stats.server.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-@Transactional(readOnly = true)
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
 
@@ -25,17 +24,15 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public void saveHit(EndpointHitDto hitDto) {
         EndpointHit endpointHit = statsMapper.mapToModel(hitDto);
-        endpointHit.setCreated(LocalDateTime.now());
         statsRepository.save(endpointHit);
     }
 
     @Override
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         if (unique) {
-            return statsRepository.findStatsWithUnique(start, end, Set.copyOf(uris));
+            return statsRepository.findStatsWithUnique(start, end, uris);
         } else {
             return statsRepository.getAllStats(start, end, uris);
         }
     }
-
 }
