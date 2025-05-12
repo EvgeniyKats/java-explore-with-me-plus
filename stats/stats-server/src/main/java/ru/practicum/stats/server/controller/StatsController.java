@@ -40,9 +40,9 @@ public class StatsController {
     }
 
     @PostMapping("/hit")
-    public ResponseEntity<String> hitStat(@Valid @RequestBody EndpointHitDto hitDto, HttpServletRequest servletRequest) {
+    public ResponseEntity<String> hitStat(@Valid @RequestBody EndpointHitDto hitDto) {
         log.info("Пришел запрос на сервис статистики POST /hit");
-        statService.saveHit(hitDto, servletRequest.getRemoteAddr());
+        statService.saveHit(hitDto);
         log.info("Информация сохранена. POST /hit отработал без ошибок");
         return new ResponseEntity<>("Информация сохранена", HttpStatus.CREATED);
     }

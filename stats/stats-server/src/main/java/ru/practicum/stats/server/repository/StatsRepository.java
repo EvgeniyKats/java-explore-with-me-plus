@@ -12,7 +12,7 @@ import java.util.Set;
 
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query("SELECT s.app, s.uri, COUNT(s.ip) " +
+    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(s.ip) AS INTEGER)) " +
             "FROM EndpointHit s " +
             "WHERE s.timestamp BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
@@ -22,7 +22,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
                                    @Param("end") Timestamp end,
                                    @Param("uris") List<String> uris);
 
-    @Query("SELECT s.app, s.uri, COUNT(DISTINCT s.ip) " +
+    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(DISTINCT s.ip) AS INTEGER)) " +
             "FROM EndpointHit s " +
             "WHERE s.timestamp BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
