@@ -8,9 +8,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import ru.practicum.stats.dto.HitDto;
-import ru.practicum.stats.dto.StatDto;
+import ru.practicum.stats.dto.EndpointHitDto;
 import ru.practicum.stats.dto.StatParamDto;
+import ru.practicum.stats.dto.ViewStatsDto;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,12 +35,12 @@ public class StatsClientRest implements StatsClient {
     }
 
     @Override
-    public void createHit(HitDto hitDto) throws RequestException {
-        log.info("Отправка hit app = {}, uri = {}, ip = {}, timestamp = {}",
+    public void createHit(EndpointHitDto hitDto) throws RequestException {
+        log.info("Отправка hit app = {}, uri = {}, ip = {}, created = {}",
                 hitDto.getApp(),
                 hitDto.getUri(),
                 hitDto.getIp(),
-                hitDto.getTimestamp());
+                hitDto.getCreated());
 
         log.trace("Отправка запроса создания hit");
         ResponseEntity<Void> response = restClient.post()
@@ -65,7 +65,7 @@ public class StatsClientRest implements StatsClient {
     }
 
     @Override
-    public List<StatDto> getStat(StatParamDto statParamDto) throws RequestException {
+    public List<ViewStatsDto> getStat(StatParamDto statParamDto) throws RequestException {
         log.info("Получение статистики с параметрами: start = {}, end = {}, uris = {}, unique = {}",
                 statParamDto.getStart(),
                 statParamDto.getEnd(),
@@ -73,7 +73,7 @@ public class StatsClientRest implements StatsClient {
                 statParamDto.getUnique());
 
         log.trace("Отправка запроса на получение статистики");
-        List<StatDto> response = restClient.get()
+        List<ViewStatsDto> response = restClient.get()
                 .uri(uriBuilder -> {
                     uriBuilder.path(PATH_STAT)
                             .queryParam("start", statParamDto.getStart())

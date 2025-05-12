@@ -7,3 +7,5 @@ spring:
     url: jdbc:h2:mem:main
     username: main
     password: main
+  h2:
+    console.enabled: true

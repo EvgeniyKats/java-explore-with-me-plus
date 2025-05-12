@@ -6,33 +6,32 @@ import org.springframework.data.repository.query.Param;
 import ru.practicum.stats.dto.ViewStatsDto;
 import ru.practicum.stats.server.model.EndpointHit;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query("SELECT s.app, s.uri, COUNT(s.ip) " +
+    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(s.ip) AS INTEGER)) " +
             "FROM EndpointHit s " +
-            "WHERE s.timestamp BETWEEN :start AND :end " +
+            "WHERE s.created BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC")
-    List<ViewStatsDto> getAllStats(@Param("start") Timestamp start,
-                                   @Param("end") Timestamp end,
+    List<ViewStatsDto> getAllStats(@Param("start") LocalDateTime start,
+                                   @Param("end") LocalDateTime end,
                                    @Param("uris") List<String> uris);
 
-    @Query("SELECT s.app, s.uri, COUNT(DISTINCT s.ip) " +
+    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(DISTINCT s.ip) AS INTEGER)) " +
             "FROM EndpointHit s " +
-            "WHERE s.timestamp BETWEEN :start AND :end " +
+            "WHERE s.created BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
-    List<ViewStatsDto> findStatsWithUnique(@Param("start") Timestamp start,
-                                           @Param("end") Timestamp end,
-                                           @Param("uris") Set<String> uris);
+    List<ViewStatsDto> findStatsWithUnique(@Param("start") LocalDateTime start,
+                                           @Param("end") LocalDateTime end,
+                                           @Param("uris") List<String> uris);
 
     List<EndpointHit> findByUri(String uri);
 
-    long countByTimestampBetween(Timestamp start, Timestamp end);
+    long countByCreatedBetween(LocalDateTime start, LocalDateTime end);
 }
