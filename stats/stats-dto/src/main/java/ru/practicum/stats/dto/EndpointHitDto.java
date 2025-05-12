@@ -1,6 +1,7 @@
 package ru.practicum.stats.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,6 +25,7 @@ public class EndpointHitDto {
     @Size(min = 7, max = 15, message = "Размерность поля ip не может быть меньше 7 и больше 15 символов")
     String ip;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @NotNull(message = "Поле timestamp не может быть пустым")
-    LocalDateTime timestamp;
+    @NotNull(message = "Поле created не может быть пустым")
+    @JsonProperty(value = "timestamp")
+    LocalDateTime created;
 }

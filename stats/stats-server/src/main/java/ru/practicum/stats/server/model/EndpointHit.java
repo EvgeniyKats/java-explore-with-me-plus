@@ -1,6 +1,5 @@
 package ru.practicum.stats.server.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +32,5 @@ public class EndpointHit {
     String app;
     String uri;
     String ip;
-    @Column(name = "created")
-    LocalDateTime timestamp;
+    LocalDateTime created;
 }

@@ -25,7 +25,7 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public void saveHit(EndpointHitDto hitDto) {
         EndpointHit endpointHit = statsMapper.mapToModel(hitDto);
-        endpointHit.setTimestamp(LocalDateTime.now());
+        endpointHit.setCreated(LocalDateTime.now());
         statsRepository.save(endpointHit);
     }
 

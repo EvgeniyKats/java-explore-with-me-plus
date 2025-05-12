@@ -14,7 +14,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
     @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(s.ip) AS INTEGER)) " +
             "FROM EndpointHit s " +
-            "WHERE s.timestamp BETWEEN :start AND :end " +
+            "WHERE s.created BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC")
@@ -24,7 +24,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
     @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(DISTINCT s.ip) AS INTEGER)) " +
             "FROM EndpointHit s " +
-            "WHERE s.timestamp BETWEEN :start AND :end " +
+            "WHERE s.created BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
@@ -34,5 +34,5 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
     List<EndpointHit> findByUri(String uri);
 
-    long countByTimestampBetween(LocalDateTime start, LocalDateTime end);
+    long countByCreatedBetween(LocalDateTime start, LocalDateTime end);
 }

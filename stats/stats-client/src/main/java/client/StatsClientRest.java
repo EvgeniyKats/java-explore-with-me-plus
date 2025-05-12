@@ -36,11 +36,11 @@ public class StatsClientRest implements StatsClient {
 
     @Override
     public void createHit(EndpointHitDto hitDto) throws RequestException {
-        log.info("Отправка hit app = {}, uri = {}, ip = {}, timestamp = {}",
+        log.info("Отправка hit app = {}, uri = {}, ip = {}, created = {}",
                 hitDto.getApp(),
                 hitDto.getUri(),
                 hitDto.getIp(),
-                hitDto.getTimestamp());
+                hitDto.getCreated());
 
         log.trace("Отправка запроса создания hit");
         ResponseEntity<Void> response = restClient.post()
