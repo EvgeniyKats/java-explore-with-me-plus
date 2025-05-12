@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,10 +17,10 @@ public class StatParamDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "Поле start не может быть пустым")
-    Timestamp start;
+    LocalDateTime start;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "Поле end не может быть пустым")
-    Timestamp end;
+    LocalDateTime end;
     List<String> uris;
     Boolean unique;
 }

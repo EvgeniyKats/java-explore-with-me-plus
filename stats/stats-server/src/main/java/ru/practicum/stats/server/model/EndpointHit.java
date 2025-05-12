@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "stats")
@@ -34,5 +34,5 @@ public class EndpointHit {
     String uri;
     String ip;
     @Column(name = "created")
-    Timestamp timestamp;
+    LocalDateTime timestamp;
 }

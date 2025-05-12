@@ -4,3 +4,5 @@ spring:
     url: jdbc:h2:mem:stats
     username: stats
     password: stats
+  h2:
+    console.enabled: true

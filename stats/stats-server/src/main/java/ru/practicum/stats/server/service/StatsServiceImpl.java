@@ -9,8 +9,6 @@ import ru.practicum.stats.server.mapper.StatsMapper;
 import ru.practicum.stats.server.model.EndpointHit;
 import ru.practicum.stats.server.repository.StatsRepository;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -27,16 +25,16 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public void saveHit(EndpointHitDto hitDto) {
         EndpointHit endpointHit = statsMapper.mapToModel(hitDto);
-        endpointHit.setTimestamp(Timestamp.from(Instant.now()));
+        endpointHit.setTimestamp(LocalDateTime.now());
         statsRepository.save(endpointHit);
     }
 
     @Override
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         if (unique) {
-            return statsRepository.findStatsWithUnique(Timestamp.valueOf(start), Timestamp.valueOf(end), Set.copyOf(uris));
+            return statsRepository.findStatsWithUnique(start, end, Set.copyOf(uris));
         } else {
-            return statsRepository.getAllStats(Timestamp.valueOf(start), Timestamp.valueOf(end), uris);
+            return statsRepository.getAllStats(start, end, uris);
         }
     }
 

@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
@@ -25,5 +25,5 @@ public class EndpointHitDto {
     String ip;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "Поле timestamp не может быть пустым")
-    Timestamp timestamp;
+    LocalDateTime timestamp;
 }

@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ru.practicum.stats.dto.ViewStatsDto;
 import ru.practicum.stats.server.model.EndpointHit;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -18,8 +18,8 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "AND (:uris IS NULL OR s.uri IN :uris) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC")
-    List<ViewStatsDto> getAllStats(@Param("start") Timestamp start,
-                                   @Param("end") Timestamp end,
+    List<ViewStatsDto> getAllStats(@Param("start") LocalDateTime start,
+                                   @Param("end") LocalDateTime end,
                                    @Param("uris") List<String> uris);
 
     @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(DISTINCT s.ip) AS INTEGER)) " +
@@ -28,11 +28,11 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "AND (:uris IS NULL OR s.uri IN :uris) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(DISTINCT s.ip) DESC")
-    List<ViewStatsDto> findStatsWithUnique(@Param("start") Timestamp start,
-                                           @Param("end") Timestamp end,
+    List<ViewStatsDto> findStatsWithUnique(@Param("start") LocalDateTime start,
+                                           @Param("end") LocalDateTime end,
                                            @Param("uris") Set<String> uris);
 
     List<EndpointHit> findByUri(String uri);
 
-    long countByTimestampBetween(Timestamp start, Timestamp end);
+    long countByTimestampBetween(LocalDateTime start, LocalDateTime end);
 }
