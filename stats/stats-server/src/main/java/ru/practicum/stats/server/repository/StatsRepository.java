@@ -15,9 +15,12 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
     @Query("SELECT s.app, s.uri, COUNT(s.ip) " +
             "FROM EndpointHit s " +
             "WHERE s.timestamp BETWEEN :start AND :end " +
+            "AND (:uris IS NULL OR s.uri IN :uris) " +
             "GROUP BY s.app, s.uri " +
             "ORDER BY COUNT(s.ip) DESC")
-    List<ViewStatsDto> getAllStats(@Param("start") Timestamp start, @Param("end") Timestamp end);
+    List<ViewStatsDto> getAllStats(@Param("start") Timestamp start,
+                                   @Param("end") Timestamp end,
+                                   @Param("uris") List<String> uris);
 
     @Query("SELECT s.app, s.uri, COUNT(DISTINCT s.ip) " +
             "FROM EndpointHit s " +
