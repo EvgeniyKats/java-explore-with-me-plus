@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class BadRequestException extends RuntimeException {
     ApiError error;
+
     public BadRequestException(String message) {
         super(message);
         error = new ApiError(

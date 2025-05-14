@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class DuplicateException extends RuntimeException {
     ApiError error;
+
     public DuplicateException(String message) {
         super(message);
         error = new ApiError(

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class NotFoundException extends RuntimeException {
     ApiError error;
+
     public NotFoundException(String message) {
         super(message);
         error = new ApiError(
