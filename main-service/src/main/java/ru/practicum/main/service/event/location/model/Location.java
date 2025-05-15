@@ -2,6 +2,7 @@ package ru.practicum.main.service.event.location.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -30,13 +31,13 @@ public class Location {
     @Column(name = "event_id", nullable = false)
     Long eventId;
 
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     Double latitude;
 
-    @Column(nullable = false, precision = 9, scale = 6)
+    @Column(nullable = false)
     Double longitude;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "eventId")
     Event event;
