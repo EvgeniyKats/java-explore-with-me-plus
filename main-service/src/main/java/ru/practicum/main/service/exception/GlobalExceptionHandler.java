@@ -11,18 +11,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleBadRequest(final BadRequestException e) {
-        return e.error;
+        return e.getError();
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFound(final NotFoundException e) {
-        return e.error;
+        return e.getError();
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handlerDuplicate(final DuplicateException e) {
-        return e.error;
+        return e.getError();
     }
 }
