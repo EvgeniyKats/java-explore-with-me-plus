@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.main.service.category.model.Category;
 import ru.practicum.main.service.event.enums.EventState;
+import ru.practicum.main.service.event.location.model.Location;
 import ru.practicum.main.service.user.model.User;
 
 import java.time.LocalDateTime;
@@ -29,27 +30,25 @@ public class Event {
     @Column(name = "event_id")
     Long id;
 
-    @Column(name = "event_title", nullable = false, length = 155)
+    @Column(name = "event_title", nullable = false, length = 120)
     String title;
 
-    @Column(nullable = false, length = 3000)
+    @Column(nullable = false, length = 7000)
     String description;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 2000)
     String annotation;
 
     @ManyToOne
-    @JoinColumn(name = "initiator_id")
+    @JoinColumn(name = "initiator_id", nullable = false)
     User initiator;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
-    Long views;
-
     @Column(nullable = false, length = 50)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     EventState state;
 
     @Column(name = "created_on")
@@ -64,13 +63,13 @@ public class Event {
     @Column(nullable = false)
     Boolean paid;
 
-    @Column(name = "confirmed_requests")
-    Long confirmedRequests;
-
     @Column(name = "participant_limit")
     Integer participantLimit;
 
     @Column(name = "request_moderation")
     Boolean requestModeration;
+
+    @OneToOne(mappedBy = "event")
+    Location location;
 
 }

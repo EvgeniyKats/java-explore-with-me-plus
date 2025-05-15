@@ -38,7 +38,7 @@ public class Request {
     Event event;
 
     @Column(nullable = false, length = 120)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     RequestStatus status;
 
     @Column(nullable = false)

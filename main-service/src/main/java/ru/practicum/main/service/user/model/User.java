@@ -34,10 +34,10 @@ public class User {
     @Column(name = "user_id")
     Long id;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "user_name", nullable = false, length = 250)
     String name;
 
-    @Column(name = "user_email", nullable = false, unique = true)
+    @Column(name = "user_email", nullable = false, unique = true, length = 254)
     String email;
 
     @OneToMany(mappedBy = "initiator")
