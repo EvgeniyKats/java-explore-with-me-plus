@@ -17,7 +17,7 @@ public @interface SizeAfterTrim {
 
     String message() default "string size after trim should be between {min} and {max} included";
 
-    Class<?>[] groups() default {String.class};
+    Class<?>[] groups() default {};
 
     Class<?>[] payload() default {};
 }
