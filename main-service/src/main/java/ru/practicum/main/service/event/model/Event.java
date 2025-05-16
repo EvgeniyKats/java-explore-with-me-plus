@@ -21,7 +21,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.main.service.category.model.Category;
 import ru.practicum.main.service.event.enums.EventState;
-import ru.practicum.main.service.event.location.model.Location;
 import ru.practicum.main.service.user.model.User;
 
 import java.time.LocalDateTime;

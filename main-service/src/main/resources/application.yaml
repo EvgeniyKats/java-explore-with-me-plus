@@ -11,5 +11,8 @@ spring:
     init:
       mode: always
 
+date:
+  pattern: yyyy-MM-dd HH:mm:ss
+
 stats-server:
   url: http://localhost:9090
