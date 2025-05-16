@@ -10,6 +10,8 @@ spring:
   sql:
     init:
       mode: always
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 
 stats-server:
   url: http://localhost:9090

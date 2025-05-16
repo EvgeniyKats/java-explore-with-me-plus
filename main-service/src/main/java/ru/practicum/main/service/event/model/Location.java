@@ -1,4 +1,4 @@
-package ru.practicum.main.service.event.location.model;
+package ru.practicum.main.service.event.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.main.service.event.model.Event;
 
 @Entity
 @Table(name = "locations")

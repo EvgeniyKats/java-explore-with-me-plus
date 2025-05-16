@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.main.service.category.model.Category;
 import ru.practicum.main.service.event.enums.EventState;
-import ru.practicum.main.service.event.location.model.Location;
 import ru.practicum.main.service.user.model.User;
 
 import java.time.LocalDateTime;
@@ -83,4 +83,9 @@ public class Event {
     @OneToOne(mappedBy = "event", fetch = FetchType.LAZY)
     Location location;
 
+    @Transient
+    Long views; // TODO заполнять (из статистики) перед конвертацией в CompilationDto
+
+    @Transient
+    Long confirmedRequests; // TODO заполнять перед конвертацией в CompilationDto/EventFullDto/EventShortDto
 }

@@ -1,0 +1,42 @@
+package ru.practicum.main.service.event.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
+import ru.practicum.main.service.event.model.Location;
+import ru.practicum.main.service.validator.SizeAfterTrim;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+public class UpdateEventAdminRequest {
+
+    @SizeAfterTrim(min = 20, max = 2000)
+    private String annotation;
+
+    private Long category;
+
+    @SizeAfterTrim(min = 20, max = 7000)
+    private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private LocalDateTime eventDate;
+
+    private Location location;
+
+    private Boolean paid;
+
+    private Integer participantLimit;
+
+    private Boolean requestModeration;
+
+    private StateAction stateAction;
+
+    @SizeAfterTrim(min = 3, max = 120)
+    private String title;
+
+    public enum StateAction {
+        PUBLISH_EVENT, REJECT_EVENT
+    }
+}
