@@ -1,4 +1,4 @@
-package ru.practicum.stats.dto;
+package client;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StatParamDto {
+public class StatParam {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "Поле start не может быть пустым")
