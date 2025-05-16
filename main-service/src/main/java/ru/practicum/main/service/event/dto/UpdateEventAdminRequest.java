@@ -1,7 +1,6 @@
 package ru.practicum.main.service.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.main.service.event.model.Location;

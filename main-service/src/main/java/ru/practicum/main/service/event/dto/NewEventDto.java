@@ -1,6 +1,7 @@
 package ru.practicum.main.service.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class NewEventDto {
 
     @NotNull
     private Location location;
+
     private Boolean paid = false;
 
     private Integer participantLimit;
@@ -40,4 +42,7 @@ public class NewEventDto {
     @NotBlank
     @SizeAfterTrim(min = 3, max = 120)
     private String title;
+
+    @JsonIgnore
+    LocalDateTime createdOn = LocalDateTime.now();
 }
