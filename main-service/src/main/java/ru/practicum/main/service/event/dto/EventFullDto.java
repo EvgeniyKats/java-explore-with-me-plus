@@ -43,13 +43,13 @@ public class EventFullDto {
 
     private Long confirmedRequests;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${date.pattern}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime createdOn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${date.pattern}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime publishedOn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${date.pattern}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime eventDate;
 
     private Integer participantLimit = 0;

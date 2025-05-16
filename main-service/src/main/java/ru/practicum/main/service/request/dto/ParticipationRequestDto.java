@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ParticipationRequestDto {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${date.pattern}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime created;
     private Long event;
     private Long id;

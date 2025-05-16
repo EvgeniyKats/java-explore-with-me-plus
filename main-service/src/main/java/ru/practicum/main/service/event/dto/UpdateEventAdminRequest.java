@@ -20,7 +20,7 @@ public class UpdateEventAdminRequest {
     @SizeAfterTrim(min = 20, max = 7000)
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${date.pattern}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime eventDate;
 
     private Location location;

@@ -22,7 +22,7 @@ public class EventShortDto {
     private Long confirmedRequests;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${date.pattern}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime eventDate;
 
     private Long id;

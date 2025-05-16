@@ -27,7 +27,7 @@ public class NewEventDto {
     private String description;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "${date.pattern}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime eventDate;
 
     @NotNull
