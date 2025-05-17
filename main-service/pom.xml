@@ -65,6 +65,8 @@
             <optional>true</optional>
         </dependency>
 
+ main_svc_exceptionhandler
+=======
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -76,6 +78,7 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.6.2</version>
         </dependency>
+ main_svc
     </dependencies>
 
     <build>
