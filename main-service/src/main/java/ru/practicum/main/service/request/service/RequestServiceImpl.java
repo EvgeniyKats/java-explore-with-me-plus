@@ -1,5 +1,6 @@
 package ru.practicum.main.service.request.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.main.service.event.EventRepository;
@@ -34,6 +35,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto createParticipationRequest(Long userId, Long eventId) {
 
         Event event = eventRepository.findById(eventId).orElseThrow(() ->
@@ -72,6 +74,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId) {
         Request request = requestRepository.findById(requestId).orElseThrow(() ->
                 new NotFoundException("Запрос не найден"));
