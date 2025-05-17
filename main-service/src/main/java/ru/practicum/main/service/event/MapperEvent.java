@@ -4,7 +4,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
-import ru.practicum.main.service.event.dto.*;
+import ru.practicum.main.service.event.dto.EventFullDto;
+import ru.practicum.main.service.event.dto.EventShortDto;
+import ru.practicum.main.service.event.dto.NewEventDto;
+import ru.practicum.main.service.event.dto.UpdateEventAdminRequest;
+import ru.practicum.main.service.event.dto.UpdateEventUserRequest;
 import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Event;
 
