@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.main.service.validator.SizeAfterTrim;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -16,5 +17,5 @@ public class NewCompilationDto {
 
     private Boolean pinned = false;
 
-    private Set<Long> events;
+    private Set<Long> events = new HashSet<>();
 }
