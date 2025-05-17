@@ -1,5 +1,6 @@
 package ru.practicum.main.service.user.controller;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getUsers(@RequestParam(defaultValue = "") List<Long> ids,
+    public List<UserDto> getUsers(@Nullable @RequestParam List<Long> ids,
                                   @Min(0) @RequestParam(defaultValue = "0") Integer from,
                                   @Min(1) @RequestParam(defaultValue = "10") Integer size) {
         log.info("Получен GET /admin/users с параметрами ids = {}, from = {}, size = {}", ids, from, size);
@@ -44,7 +45,7 @@ public class AdminController {
                 .build();
         List<UserDto> users = userService.getUsers(param);
 
-        log.info("Успешно выполено получение пользователей с параметрами ids = {}, from = {}, size = {}. Найдено : {}",
+        log.info("Успешно выполнено получение пользователей с параметрами ids = {}, from = {}, size = {}. Найдено : {}",
                 ids,
                 from,
                 size,
