@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.main.service.event.EventRepository;
 import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Event;
+import ru.practicum.main.service.exception.ConflictException;
 import ru.practicum.main.service.exception.DuplicateException;
 import ru.practicum.main.service.exception.NotFoundException;
 import ru.practicum.main.service.request.MapperRequest;
@@ -28,7 +29,8 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<ParticipationRequestDto> getParticipationRequests(Long userId) {
-        return requestRepository.findAllByUserId(userId);
+        List<Request> requests = requestRepository.findAllByRequesterId(userId);
+        return requests.stream().map(mapperRequest::toParticipationRequestDto).toList();
     }
 
     @Override
@@ -45,15 +47,15 @@ public class RequestServiceImpl implements RequestService {
         }
 
         if (!event.getState().equals(EventState.PUBLISHED)) {
-            throw new DuplicateException("Невозможно создать запрос на неопубликованное событие");
+            throw new ConflictException("Невозможно создать запрос на неопубликованное событие");
         }
 
         if (requestRepository.countByEventId((eventId)) >= event.getParticipantLimit()) {
-            throw new DuplicateException("Достигнут лимит запросов на событие");
+            throw new ConflictException("Достигнут лимит запросов на событие");
         }
 
         if (event.getInitiator().getId().equals(userId)) {
-            throw new DuplicateException("Невозможно создать запрос будучи инициатором события");
+            throw new ConflictException("Невозможно создать запрос будучи инициатором события");
         }
 
         Request request = new Request(
@@ -70,7 +72,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ParticipationRequestDto updateParticipationRequest(Long userId, Long requestId) {
+    public ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId) {
         Request request = requestRepository.findById(requestId).orElseThrow(() ->
                 new NotFoundException("Запрос не найден"));
 

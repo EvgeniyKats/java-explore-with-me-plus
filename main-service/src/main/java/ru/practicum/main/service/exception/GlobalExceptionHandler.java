@@ -25,4 +25,10 @@ public class GlobalExceptionHandler {
     public ApiError handlerDuplicate(final DuplicateException e) {
         return e.getError();
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleConflict(final ConflictException e) {
+        return e.getError();
+    }
 }

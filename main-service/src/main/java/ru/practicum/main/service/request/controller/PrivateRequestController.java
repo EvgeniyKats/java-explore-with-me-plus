@@ -45,7 +45,7 @@ public class PrivateRequestController {
     public ParticipationRequestDto updateParticipationRequest(@Min(1) @PathVariable Long userId,
                                                               @Min(1) @PathVariable Long requestId) {
         log.info("Получен PATCH /users/{}/requests , eventId = {}", userId, requestId);
-        ParticipationRequestDto participationRequest = requestService.updateParticipationRequest(userId, requestId);
+        ParticipationRequestDto participationRequest = requestService.cancelParticipationRequest(userId, requestId);
         log.info("Успешно отменена заявка пользователем = {} на участие в мероприятити = {}", userId, requestId);
         return participationRequest;
     }
