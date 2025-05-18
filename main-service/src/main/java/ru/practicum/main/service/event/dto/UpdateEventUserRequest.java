@@ -3,7 +3,6 @@ package ru.practicum.main.service.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.main.service.event.model.Location;
 import ru.practicum.main.service.validator.SizeAfterTrim;
 
