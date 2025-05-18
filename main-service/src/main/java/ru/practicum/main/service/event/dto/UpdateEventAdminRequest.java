@@ -3,6 +3,7 @@ package ru.practicum.main.service.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.main.service.event.model.Location;
 import ru.practicum.main.service.validator.SizeAfterTrim;
 
@@ -20,7 +21,7 @@ public class UpdateEventAdminRequest {
     @SizeAfterTrim(min = 20, max = 7000)
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 
     private Location location;

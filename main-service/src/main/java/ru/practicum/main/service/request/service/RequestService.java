@@ -1,6 +1,9 @@
 package ru.practicum.main.service.request.service;
 
+import org.mapstruct.Named;
+import ru.practicum.main.service.event.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.main.service.request.dto.ParticipationRequestDto;
+import ru.practicum.main.service.request.enums.RequestStatus;
 
 import java.util.List;
 
