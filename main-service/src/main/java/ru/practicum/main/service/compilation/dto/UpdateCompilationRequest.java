@@ -15,4 +15,16 @@ public class UpdateCompilationRequest {
     private Boolean pinned;
 
     private Set<Long> events;
+
+    public boolean hasTitle() {
+        return title != null;
+    }
+
+    public boolean hasPinned() {
+        return pinned != null;
+    }
+
+    public boolean hasEvents() {
+        return events != null;
+    }
 }
