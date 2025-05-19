@@ -28,7 +28,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
             FROM Event e WHERE (:users IS NULL OR e.initiator.id IN :users) AND (:states IS NULL OR e.state IN :states) AND (:categories IS NULL OR e.category.id IN :categories) AND (:rangeStart IS NULL OR e.createdOn > :rangeStart)
             AND (:rangeEnd IS NULL OR e.createdOn < :rangeEnd)
             """)
-    Page<Event> getEventsWithFiltersAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
+    List<Event> getEventsWithFiltersAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
 
     @Query(value = """
             SELECT e
