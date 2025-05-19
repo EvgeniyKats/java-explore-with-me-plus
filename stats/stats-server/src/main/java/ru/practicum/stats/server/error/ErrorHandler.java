@@ -15,13 +15,13 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public AppError handleException(final Exception exp, HttpStatus status) {
+    public AppError handleException(final Exception exp) {
         log.info("500 {}", exp.getMessage(), exp);
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         exp.printStackTrace(pw);
         String stackTrace = sw.toString();
-        return new AppError(status, "Error.....", exp.getMessage(), stackTrace);
+        return new AppError(HttpStatus.INTERNAL_SERVER_ERROR, "Error.....", exp.getMessage(), stackTrace);
     }
 
 }

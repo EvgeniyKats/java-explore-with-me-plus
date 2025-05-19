@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Location;
 import ru.practicum.main.service.validator.SizeAfterTrim;
 
@@ -47,4 +48,7 @@ public class NewEventDto {
 
     @JsonIgnore
     LocalDateTime createdOn = LocalDateTime.now();
+
+    @JsonIgnore
+    EventState state = EventState.PENDING;
 }

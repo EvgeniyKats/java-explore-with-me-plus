@@ -1,12 +1,18 @@
 package ru.practicum.main.service.event.service;
 
+import client.StatParam;
+import client.StatsClient;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.service.Constants;
+import ru.practicum.main.service.category.model.Category;
+import ru.practicum.main.service.category.repository.CategoryRepository;
 import ru.practicum.main.service.event.EventRepository;
 import ru.practicum.main.service.event.LocationRepository;
 import ru.practicum.main.service.event.MapperEvent;
@@ -22,23 +28,29 @@ import ru.practicum.main.service.request.enums.RequestStatus;
 import ru.practicum.main.service.request.model.Request;
 import ru.practicum.main.service.user.UserRepository;
 import ru.practicum.main.service.user.model.User;
+import ru.practicum.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static ru.practicum.main.service.Constants.CATEGORY_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PrivateEventServiceImpl implements PrivateEventService {
 
+    private static final Logger log = LoggerFactory.getLogger(PrivateEventServiceImpl.class);
     private final EventRepository eventRepository;
     private final MapperEvent eventMapper;
     private final RequestRepository requestRepository;
     private final MapperRequest requestMapper;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
+    private final StatsClient statsClient;
 
     @Override
     public List<EventFullDto> getAllUsersEvents(Long userId, Integer from, Integer size) {
@@ -50,16 +62,28 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     @Override
     @Transactional
     public EventFullDto addNewEvent(Long userId, NewEventDto eventDto) {
+        Event event = eventMapper.toEvent(eventDto);
+
         if (eventDto.getEventDate().minusHours(1).minusMinutes(59).isBefore(LocalDateTime.now())) {
             throw new ConflictException("Дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента");
         }
+
+        Category category = categoryRepository.findById(eventDto.getCategory()).orElseThrow(
+                () -> new NotFoundException(CATEGORY_NOT_FOUND));
+        event.setCategory(category);
+
         User initiator = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND));
-        Event newEvent = eventMapper.toEvent(eventDto);
-        newEvent.setInitiator(initiator);
-        newEvent.setState(EventState.PENDING);
-        newEvent = eventRepository.save(newEvent);
-        return eventMapper.toEventFullDto(newEvent);
+        event.setInitiator(initiator);
+
+        event.getLocation().setEvent(event);
+        locationRepository.save(event.getLocation());
+
+        event = eventRepository.save(event);
+
+        EventFullDto eventFullDto = eventMapper.toEventFullDto(event);
+        fillEventFullDto(eventFullDto);
+        return eventFullDto;
     }
 
     @Override
@@ -121,5 +145,21 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         result.setConfirmedRequests(confirmed);
         result.setRejectedRequests(rejected);
         return result;
+    }
+
+    private void fillEventFullDto(EventFullDto eventFullDto) {
+        long countConfirmedRequest = requestRepository.countByEventIdAndStatus(eventFullDto.getId(),
+                RequestStatus.CONFIRMED);
+        log.debug("event = {}, countConfirmedRequest = {}", eventFullDto.getId(), countConfirmedRequest);
+        eventFullDto.setConfirmedRequests(countConfirmedRequest);
+
+        StatParam statParam = new StatParam();
+        statParam.setStart(eventFullDto.getCreatedOn());
+        statParam.setEnd(LocalDateTime.now());
+        statParam.setUris(List.of("events/" + eventFullDto.getId()));
+
+        List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
+        long viewsCount = viewStats.isEmpty() ? 0 : viewStats.getFirst().getHits();
+        eventFullDto.setViews(viewsCount);
     }
 }

@@ -28,7 +28,6 @@ public class StatsClientRest implements StatsClient {
     private final RestClient restClient;
 
     public StatsClientRest(@Value("${stats-server:" + PATH_BASE + "}") String statsServerUrl) {
-        System.out.println("statsServerUrl = " + statsServerUrl);
         restClient = RestClient.builder()
                 .baseUrl(statsServerUrl)
                 .build();

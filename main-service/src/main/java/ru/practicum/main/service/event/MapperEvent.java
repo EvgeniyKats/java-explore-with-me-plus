@@ -14,14 +14,14 @@ import ru.practicum.main.service.event.model.Event;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MapperEvent {
-    @Mapping(source = "category", target = "category.id")
+    @Mapping(source = "category", target = "category.id", ignore = true)
     Event toEvent(NewEventDto newEventDto);
 
-    @Mapping(source = "category", target = "category.id")
+    @Mapping(source = "category", target = "category.id", ignore = true)
     @Mapping(source = "stateAction", target = "state", qualifiedByName = "stateFromAdminAction")
     Event toEvent(UpdateEventAdminRequest updateEventAdminRequest);
 
-    @Mapping(source = "category", target = "category.id")
+    @Mapping(source = "category", target = "category.id", ignore = true)
     @Mapping(source = "stateAction", target = "state", qualifiedByName = "stateFromUserAction")
     Event toEvent(UpdateEventUserRequest updateEventUserRequest);
 
