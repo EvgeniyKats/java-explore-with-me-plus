@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.main.service.event.dto.EventFullDto;
 import ru.practicum.main.service.event.dto.EventShortDto;
 import ru.practicum.main.service.event.enums.EventSortType;
-import ru.practicum.main.service.event.service.PublicEventService;
+import ru.practicum.main.service.event.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +28,7 @@ import static ru.practicum.main.service.Constants.DATE_PATTERN;
 @Validated
 public class PublicEventController {
 
-    private final PublicEventService eventService;
+    private final EventService eventService;
 
     @GetMapping
     public ResponseEntity<List<EventShortDto>> getEventsByFilters(@RequestParam(name = "text", required = false) String text,
@@ -46,7 +46,7 @@ public class PublicEventController {
         return ResponseEntity.ok(events);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{eventId}")
     public ResponseEntity<EventFullDto> getEventById(@PathVariable Long id) {
         log.info("Пришел GET запрос на /events/{} Public Event Controller", id);
         EventFullDto event = eventService.getEventById(id);

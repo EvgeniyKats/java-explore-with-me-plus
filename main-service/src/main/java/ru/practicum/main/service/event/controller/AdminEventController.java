@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.service.event.dto.EventFullDto;
 import ru.practicum.main.service.event.dto.UpdateEventAdminRequest;
 import ru.practicum.main.service.event.enums.EventState;
-import ru.practicum.main.service.event.service.AdminEventService;
+import ru.practicum.main.service.event.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +26,7 @@ import static ru.practicum.main.service.Constants.DATE_PATTERN;
 @Validated
 public class AdminEventController {
 
-    private final AdminEventService eventService;
+    private final EventService eventService;
 
     @GetMapping
     public ResponseEntity<List<EventFullDto>> getEventsAdmin(@RequestParam(name = "users", required = false) List<Long> users,
@@ -43,7 +42,7 @@ public class AdminEventController {
         return ResponseEntity.ok(events);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDto> updateEvent(@PathVariable(name = "id") Long id,
                                                     @Valid @RequestBody UpdateEventAdminRequest eventDto) {
         log.info("Пришел PATCH запрос на /admin/events/{} на Admin Event Controller с телом: {}", id, eventDto);

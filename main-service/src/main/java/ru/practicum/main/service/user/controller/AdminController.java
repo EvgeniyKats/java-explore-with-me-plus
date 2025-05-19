@@ -58,7 +58,7 @@ public class AdminController {
     public UserDto createUser(@Valid @RequestBody NewUserRequest newUserRequest) {
         log.info("Получен POST /admin/users");
         UserDto user = userService.createUser(newUserRequest);
-        log.info("Пользователь успешно сохранён, id = {}", user.getId());
+        log.info("Пользователь успешно сохранён, eventId = {}", user.getId());
         return user;
     }
 
@@ -66,6 +66,6 @@ public class AdminController {
     public void deleteUser(@Min(1) @PathVariable Long userId) {
         log.info("Получен DELETE /admin/users/{}", userId);
         userService.deleteUser(userId);
-        log.info("Пользователь успешно удалён, id = {}", userId);
+        log.info("Пользователь успешно удалён, eventId = {}", userId);
     }
 }

@@ -68,44 +68,44 @@ CREATE TABLE IF NOT EXISTS events_compilations
     PRIMARY KEY (event_id, compilation_id)
 );
 
---ALTER TABLE events
---    DROP CONSTRAINT IF EXISTS fk_events_initiator_id;
---ALTER TABLE events
---    ADD CONSTRAINT fk_events_initiator_id FOREIGN KEY (initiator_id)
---        REFERENCES users (user_id) ON DELETE CASCADE;
---
---ALTER TABLE events
---    DROP CONSTRAINT IF EXISTS fk_events_category_id;
---ALTER TABLE events
---    ADD CONSTRAINT fk_events_category_id FOREIGN KEY (category_id)
---        REFERENCES categories (category_id);
---
---ALTER TABLE locations
---    DROP CONSTRAINT IF EXISTS fk_locations_event_id;
---ALTER TABLE locations
---    ADD CONSTRAINT fk_locations_event_id FOREIGN KEY (event_id)
---        REFERENCES events (event_id) ON DELETE CASCADE;
---
---ALTER TABLE requests
---    DROP CONSTRAINT IF EXISTS fk_requests_requester_id;
---ALTER TABLE requests
---    ADD CONSTRAINT fk_requests_requester_id FOREIGN KEY (requester_id)
---        REFERENCES users (user_id) ON DELETE CASCADE;
---
---ALTER TABLE requests
---    DROP CONSTRAINT IF EXISTS fk_requests_event_id;
---ALTER TABLE requests
---    ADD CONSTRAINT fk_requests_event_id FOREIGN KEY (event_id)
---        REFERENCES events (event_id) ON DELETE CASCADE;
---
---ALTER TABLE events_compilations
---    DROP CONSTRAINT IF EXISTS fk_events_compilations_event_id;
---ALTER TABLE events_compilations
---    ADD CONSTRAINT fk_events_compilations_event_id FOREIGN KEY (event_id)
---        REFERENCES events (event_id) ON DELETE CASCADE;
---
---ALTER TABLE events_compilations
---    DROP CONSTRAINT IF EXISTS fk_events_compilations_compilation_id;
---ALTER TABLE events_compilations
---    ADD CONSTRAINT fk_events_compilations_compilation_id FOREIGN KEY (compilation_id)
---        REFERENCES compilations (compilation_id) ON DELETE CASCADE;
+ALTER TABLE events
+    DROP CONSTRAINT IF EXISTS fk_events_initiator_id;
+ALTER TABLE events
+    ADD CONSTRAINT fk_events_initiator_id FOREIGN KEY (initiator_id)
+        REFERENCES users (user_id) ON DELETE CASCADE;
+
+ALTER TABLE events
+    DROP CONSTRAINT IF EXISTS fk_events_category_id;
+ALTER TABLE events
+    ADD CONSTRAINT fk_events_category_id FOREIGN KEY (category_id)
+        REFERENCES categories (category_id);
+
+ALTER TABLE locations
+    DROP CONSTRAINT IF EXISTS fk_locations_event_id;
+ALTER TABLE locations
+    ADD CONSTRAINT fk_locations_event_id FOREIGN KEY (event_id)
+        REFERENCES events (event_id) ON DELETE CASCADE;
+
+ALTER TABLE requests
+    DROP CONSTRAINT IF EXISTS fk_requests_requester_id;
+ALTER TABLE requests
+    ADD CONSTRAINT fk_requests_requester_id FOREIGN KEY (requester_id)
+        REFERENCES users (user_id) ON DELETE CASCADE;
+
+ALTER TABLE requests
+    DROP CONSTRAINT IF EXISTS fk_requests_event_id;
+ALTER TABLE requests
+    ADD CONSTRAINT fk_requests_event_id FOREIGN KEY (event_id)
+        REFERENCES events (event_id) ON DELETE CASCADE;
+
+ALTER TABLE events_compilations
+    DROP CONSTRAINT IF EXISTS fk_events_compilations_event_id;
+ALTER TABLE events_compilations
+    ADD CONSTRAINT fk_events_compilations_event_id FOREIGN KEY (event_id)
+        REFERENCES events (event_id) ON DELETE CASCADE;
+
+ALTER TABLE events_compilations
+    DROP CONSTRAINT IF EXISTS fk_events_compilations_compilation_id;
+ALTER TABLE events_compilations
+    ADD CONSTRAINT fk_events_compilations_compilation_id FOREIGN KEY (compilation_id)
+        REFERENCES compilations (compilation_id) ON DELETE CASCADE;

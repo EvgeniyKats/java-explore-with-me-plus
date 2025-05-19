@@ -1,6 +1,5 @@
 package ru.practicum.main.service.event;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +19,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
             FROM Event e WHERE (:text IS NULL OR e.annotation LIKE :text OR e.description LIKE :text) AND (:categories IS NULL OR e.category.id IN :categories) AND (:paid IS NULL OR e.paid = paid)
             AND (:rangeStart IS NULL OR e.createdOn > :rangeStart) AND (:rangeEnd IS NULL OR e.createdOn < :rangeEnd) AND (:onlyAvailable = false OR e.confirmedRequests < e.participantLimit)
             """, nativeQuery = true)
-    Page<Event> getEventsWithFilters(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, Pageable pageable);
+    List<Event> getEventsWithFilters(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, Pageable pageable);
 
 
     @Query(value = """
@@ -34,7 +33,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
             SELECT e
             FROM Event e WHERE e.initiator.id = :userId
             """)
-    Page<Event> getUserEvents(Long userId, Pageable pageable);
+    List<Event> getUserEvents(Long userId, Pageable pageable);
 
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long initiatorId);
 }

@@ -32,7 +32,7 @@ public class AdminCompilationController {
     public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
         log.info("Получен POST /admin/compilations title = {}", newCompilationDto.getTitle());
         CompilationDto compilation = compilationService.createCompilation(newCompilationDto);
-        log.info("Успешно создана подборка title = {}, id = {}", compilation.getTitle(), compilation.getId());
+        log.info("Успешно создана подборка title = {}, eventId = {}", compilation.getTitle(), compilation.getId());
         return compilation;
     }
 
@@ -41,7 +41,7 @@ public class AdminCompilationController {
                                             @Valid @RequestBody UpdateCompilationRequest updateCompilationRequest) {
         log.info("Получен PATCH /admin/compilations/{}", compId);
         CompilationDto compilation = compilationService.updateCompilation(updateCompilationRequest, compId);
-        log.info("Успешно обновлена подборка id = {}", compilation.getId());
+        log.info("Успешно обновлена подборка eventId = {}", compilation.getId());
         return compilation;
     }
 
@@ -49,6 +49,6 @@ public class AdminCompilationController {
     public void deleteCompilation(@Min(1) @PathVariable Long compId) {
         log.info("Получен DELETE /admin/compilations/{}", compId);
         compilationService.deleteCompilation(compId);
-        log.info("Подборка успешно удалена, id = {}", compId);
+        log.info("Подборка успешно удалена, eventId = {}", compId);
     }
 }

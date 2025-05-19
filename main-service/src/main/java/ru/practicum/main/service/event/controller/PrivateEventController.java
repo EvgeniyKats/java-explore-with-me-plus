@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.service.event.dto.*;
-import ru.practicum.main.service.event.service.PrivateEventService;
+import ru.practicum.main.service.event.service.EventService;
 import ru.practicum.main.service.request.dto.ParticipationRequestDto;
 
 import java.util.List;
@@ -22,14 +22,14 @@ import java.util.List;
 @Validated
 public class PrivateEventController {
 
-    private final PrivateEventService eventService;
+    private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<EventFullDto>> getAllUserEvents(@PathVariable(name = "userId") Long userId,
+    public ResponseEntity<List<EventShortDto>> getAllUserEvents(@PathVariable(name = "userId") Long userId,
                                                                @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                                @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
         log.info("Пришел GET запрос на /users/{}/events", userId);
-        List<EventFullDto> events = eventService.getAllUsersEvents(userId, from, size);
+        List<EventShortDto> events = eventService.getAllUsersEvents(userId, from, size);
         log.info("Отправлен ответ GET /users/{}/events с телом: {}", userId, events);
         return ResponseEntity.ok(events);
     }
@@ -47,7 +47,7 @@ public class PrivateEventController {
     public ResponseEntity<EventFullDto> getEventById(@PathVariable(name = "userId") Long userId,
                                                      @PathVariable(name = "eventId") Long eventId) {
         log.info("Пришел GET запрос на /users/{}/events/{}", userId, eventId);
-        EventFullDto event = eventService.getEventById(userId, eventId);
+        EventFullDto event = eventService.getEventsByUserIdByEventId(userId, eventId);
         log.info("Отправлен ответ на GET /users/{}/events/{} с телом: {}", userId, eventId, event);
         return ResponseEntity.ok(event);
     }

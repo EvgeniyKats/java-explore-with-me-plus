@@ -46,10 +46,10 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto getCompilationById(Long compId) {
-        log.trace("Попытка получить подборку по id = {}", compId);
+        log.trace("Попытка получить подборку по eventId = {}", compId);
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id = " + compId + " не найдена"));
-        log.trace("Подборка с id = {} найдена", compId);
+                .orElseThrow(() -> new NotFoundException("Подборка с eventId = " + compId + " не найдена"));
+        log.trace("Подборка с eventId = {} найдена", compId);
         return mapperCompilation.toCompilationDto(compilation);
     }
 
@@ -59,7 +59,7 @@ public class CompilationServiceImpl implements CompilationService {
         log.trace("Попытка создать новую подборку");
         Compilation compilation = mapperCompilation.toCompilation(newCompilationDto);
         compilationRepository.save(compilation);
-        log.trace("Успешно сохранена подборка, id = {}", compilation.getId());
+        log.trace("Успешно сохранена подборка, eventId = {}", compilation.getId());
         return mapperCompilation.toCompilationDto(compilation);
     }
 
@@ -68,7 +68,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto updateCompilation(UpdateCompilationRequest updateCompilationRequest, Long compId) {
         log.trace("Попытка обновить подборку");
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id = " + compId + " не найдена"));
+                .orElseThrow(() -> new NotFoundException("Подборка с eventId = " + compId + " не найдена"));
 
         if (updateCompilationRequest.hasEvents()) {
             log.trace("Необходимо обновить events");
@@ -110,11 +110,11 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public void deleteCompilation(Long compId) {
-        log.trace("Попытка удалить подборку с id = {}", compId);
+        log.trace("Попытка удалить подборку с eventId = {}", compId);
         compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id = " + compId + " не найдена"));
+                .orElseThrow(() -> new NotFoundException("Подборка с eventId = " + compId + " не найдена"));
 
         compilationRepository.deleteById(compId);
-        log.trace("Подборка с id = {} успешно удалена", compId);
+        log.trace("Подборка с eventId = {} успешно удалена", compId);
     }
 }
