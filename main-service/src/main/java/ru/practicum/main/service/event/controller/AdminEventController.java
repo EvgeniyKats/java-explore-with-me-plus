@@ -1,5 +1,6 @@
 package ru.practicum.main.service.event.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class AdminEventController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<EventFullDto> updateEvent(@PathVariable(name = "id") Long id,
-                                    @RequestBody UpdateEventAdminRequest eventDto) {
+                                    @Valid @RequestBody UpdateEventAdminRequest eventDto) {
         log.info("Пришел PATCH запрос на /admin/events/{} на Admin Event Controller с телом: {}", id, eventDto);
         EventFullDto event = eventService.updateEvent(id, eventDto);
         log.info("Отправлен ответ PATCH /admin/events/{} с телом: {}", id, event);

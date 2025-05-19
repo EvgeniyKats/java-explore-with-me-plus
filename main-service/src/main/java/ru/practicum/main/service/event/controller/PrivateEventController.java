@@ -1,5 +1,6 @@
 package ru.practicum.main.service.event.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class PrivateEventController {
 
     @PostMapping
     public ResponseEntity<EventFullDto> addNewEvent(@PathVariable(name = "userId") Long userId,
-                                                    @RequestBody NewEventDto newEventDto) {
+                                                    @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Пришел POST запрос на /users/{}/events с телом: {}", userId, newEventDto);
         EventFullDto event = eventService.addNewEvent(userId, newEventDto);
         log.info("Отправлен ответ POST /users/{}/events с телом: {}", userId, event);
@@ -54,7 +55,7 @@ public class PrivateEventController {
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDto> updateEvent(@PathVariable(name = "userId") Long userId,
                                                     @PathVariable(name = "eventId") Long eventId,
-                                                    @RequestBody UpdateEventUserRequest eventDto) {
+                                                    @Valid @RequestBody UpdateEventUserRequest eventDto) {
         log.info("Пришел PATCH запрос на /users/{}/events/{} с телом: {}", userId, eventId, eventDto);
         EventFullDto event = eventService.updateEvent(userId, eventId, eventDto);
         log.info("Отправлен ответ на PATCH /users/{}/events/{} с телом: {}", userId, eventId, event);
@@ -73,7 +74,7 @@ public class PrivateEventController {
     @PatchMapping("/{eventId}/requests")
     public ResponseEntity<EventRequestStatusUpdateResult> updateRequests(@PathVariable(name = "userId") Long userId,
                                                                          @PathVariable(name = "eventId") Long eventId,
-                                                                         @RequestBody EventRequestStatusUpdateRequest updateRequest) {
+                                                                         @Valid @RequestBody EventRequestStatusUpdateRequest updateRequest) {
         log.info("Пришел PATCH запрос на /users/{}/events/{}/requests с телом: {}", userId, eventId, updateRequest);
         EventRequestStatusUpdateResult result = eventService.updateEventRequests(userId, eventId, updateRequest);
         log.info("Отправлен ответ на PATCH /users/{}/events/{},requests с телом: {}", userId, eventId, result);
