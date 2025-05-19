@@ -8,6 +8,8 @@ import ru.practicum.main.service.validator.SizeAfterTrim;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.main.service.Constants.DATE_PATTERN;
+
 @Getter
 @Setter
 public class UpdateEventAdminRequest {
@@ -20,7 +22,7 @@ public class UpdateEventAdminRequest {
     @SizeAfterTrim(min = 20, max = 7000)
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_PATTERN)
     private LocalDateTime eventDate;
 
     private Location location;

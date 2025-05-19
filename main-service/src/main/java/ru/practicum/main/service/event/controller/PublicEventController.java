@@ -19,6 +19,8 @@ import ru.practicum.main.service.event.service.PublicEventService;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.practicum.main.service.Constants.DATE_PATTERN;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -32,8 +34,8 @@ public class PublicEventController {
     public ResponseEntity<List<EventShortDto>> getEventsByFilters(@RequestParam(name = "text", required = false) String text,
                                                                   @RequestParam(name = "categories", required = false) List<Long> categories,
                                                                   @RequestParam(name = "paid", required = false) Boolean paid,
-                                                                  @RequestParam(name = "rangeStart", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-                                                                  @RequestParam(name = "rangeEnd", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+                                                                  @RequestParam(name = "rangeStart", required = false) @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime rangeStart,
+                                                                  @RequestParam(name = "rangeEnd", required = false) @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime rangeEnd,
                                                                   @RequestParam(name = "onlyAvailable", required = false, defaultValue = "false") Boolean onlyAvailable,
                                                                   @RequestParam(name = "sort", required = false) EventSortType sort,
                                                                   @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,

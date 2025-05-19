@@ -11,6 +11,8 @@ import ru.practicum.main.service.validator.SizeAfterTrim;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.main.service.Constants.DATE_PATTERN;
+
 @Getter
 @Setter
 public class NewEventDto {
@@ -27,7 +29,7 @@ public class NewEventDto {
     private String description;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_PATTERN)
     private LocalDateTime eventDate;
 
     @NotNull
