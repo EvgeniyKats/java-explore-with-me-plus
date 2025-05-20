@@ -57,7 +57,7 @@ public class PrivateEventController {
                                                     @PathVariable(name = "eventId") Long eventId,
                                                     @Valid @RequestBody UpdateEventUserRequest eventDto) {
         log.info("Пришел PATCH запрос на /users/{}/events/{} с телом: {}", userId, eventId, eventDto);
-        EventFullDto event = eventService.updateEvent(userId, eventId, eventDto);
+        EventFullDto event = eventService.updateEventByUser(userId, eventId, eventDto);
         log.info("Отправлен ответ на PATCH /users/{}/events/{} с телом: {}", userId, eventId, event);
         return ResponseEntity.ok(event);
     }

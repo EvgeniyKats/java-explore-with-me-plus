@@ -14,14 +14,14 @@ import static ru.practicum.main.service.Constants.DATE_PATTERN;
 
 @Getter
 @Setter
-public class EventShortDto {
+public class EventShortDto implements ResponseEvent {
     @NotBlank
     private String annotation;
 
     @NotNull
     private CategoryDto category;
 
-    private Long confirmedRequests;
+    private int confirmedRequests;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_PATTERN)
@@ -38,5 +38,5 @@ public class EventShortDto {
     @NotBlank
     private String title;
 
-    private Long views;
+    private long views;
 }

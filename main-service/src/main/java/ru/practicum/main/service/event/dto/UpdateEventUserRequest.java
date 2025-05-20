@@ -37,8 +37,16 @@ public class UpdateEventUserRequest {
     @SizeAfterTrim(min = 3, max = 120)
     private String title;
 
-
     public enum StateAction {
         SEND_TO_REVIEW, CANCEL_REVIEW
+    }
+
+    public boolean hasEventDate() {
+        return eventDate != null;
+    }
+
+
+    public boolean hasStateAction() {
+        return stateAction != null;
     }
 }

@@ -1,5 +1,8 @@
 package ru.practicum.main.service.event.controller;
 
+import client.StatsClient;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,7 @@ import ru.practicum.main.service.event.dto.EventFullDto;
 import ru.practicum.main.service.event.dto.EventShortDto;
 import ru.practicum.main.service.event.enums.EventSortType;
 import ru.practicum.main.service.event.service.EventService;
+import ru.practicum.stats.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +33,7 @@ import static ru.practicum.main.service.Constants.DATE_PATTERN;
 public class PublicEventController {
 
     private final EventService eventService;
+    private final StatsClient statsClient;
 
     @GetMapping
     public ResponseEntity<List<EventShortDto>> getEventsByFilters(@RequestParam(name = "text", required = false) String text,
@@ -39,18 +44,30 @@ public class PublicEventController {
                                                                   @RequestParam(name = "onlyAvailable", required = false, defaultValue = "false") Boolean onlyAvailable,
                                                                   @RequestParam(name = "sort", required = false) EventSortType sort,
                                                                   @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
-                                                                  @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
+                                                                  @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size,
+                                                                  HttpServletRequest request) {
         log.info("Пришел GET запрос /events на Public Event Controller");
+        doHit(request);
         List<EventShortDto> events = eventService.getEventsByFilters(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         log.info("Отправлен ответ на GET /events Public Event Controller с телом: {}", events);
         return ResponseEntity.ok(events);
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> getEventById(@PathVariable Long id) {
-        log.info("Пришел GET запрос на /events/{} Public Event Controller", id);
-        EventFullDto event = eventService.getEventById(id);
-        log.info("Отправлен ответ на GET /events/{} c телом: {}", id, event);
+    public ResponseEntity<EventFullDto> getEventById(@PathVariable Long eventId, HttpServletRequest request) {
+        log.info("Пришел GET запрос на /events/{} Public Event Controller", eventId);
+        doHit(request);
+        EventFullDto event = eventService.getEventById(eventId);
+        log.info("Отправлен ответ на GET /events/{} c телом: {}", eventId, event);
         return ResponseEntity.ok(event);
+    }
+
+    private void doHit(HttpServletRequest request) {
+        EndpointHitDto hitDto = new EndpointHitDto();
+        hitDto.setApp("ewm-main-service");
+        hitDto.setIp(request.getRemoteAddr());
+        hitDto.setUri(request.getRequestURI());
+        hitDto.setCreated(LocalDateTime.now());
+        statsClient.createHit(hitDto);
     }
 }

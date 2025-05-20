@@ -8,6 +8,7 @@ import ru.practicum.main.service.event.dto.EventFullDto;
 import ru.practicum.main.service.event.dto.EventShortDto;
 import ru.practicum.main.service.event.dto.NewEventDto;
 import ru.practicum.main.service.event.dto.UpdateEventAdminRequest;
+import ru.practicum.main.service.event.dto.UpdateEventParam;
 import ru.practicum.main.service.event.dto.UpdateEventUserRequest;
 import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Event;
@@ -28,6 +29,12 @@ public interface MapperEvent {
     EventShortDto toEventShortDto(Event event);
 
     EventFullDto toEventFullDto(Event event);
+
+    UpdateEventParam toUpdateParam(UpdateEventAdminRequest request);
+
+    UpdateEventParam toUpdateParam(UpdateEventUserRequest request);
+
+
 
     @Named("stateFromAdminAction")
     default EventState stateFromAdminAction(UpdateEventAdminRequest.StateAction action) {

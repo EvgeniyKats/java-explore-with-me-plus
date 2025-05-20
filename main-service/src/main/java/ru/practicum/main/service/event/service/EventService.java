@@ -14,7 +14,7 @@ public interface EventService {
                                             List<Long> categories, LocalDateTime rangeStart,
                                             LocalDateTime rangeEnd, Integer from, Integer size);
 
-    EventFullDto updateEvent(Long eventId, UpdateEventAdminRequest eventDto);
+    EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest eventDto);
 
     List<EventShortDto> getAllUsersEvents(Long userId, Integer from, Integer size);
 
@@ -22,7 +22,7 @@ public interface EventService {
 
     EventFullDto getEventsByUserIdByEventId(Long userId, Long eventId);
 
-    EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventDto);
+    EventFullDto updateEventByUser(Long userId, Long eventId, UpdateEventUserRequest updateEventDto);
 
     List<ParticipationRequestDto> getEventRequests(Long userId, Long eventId);
 

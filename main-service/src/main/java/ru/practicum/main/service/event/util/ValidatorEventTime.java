@@ -1,4 +1,4 @@
-package ru.practicum.main.service.event;
+package ru.practicum.main.service.event.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

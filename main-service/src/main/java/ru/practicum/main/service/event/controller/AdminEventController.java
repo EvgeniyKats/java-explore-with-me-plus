@@ -43,10 +43,10 @@ public class AdminEventController {
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> updateEvent(@PathVariable(name = "id") Long id,
+    public ResponseEntity<EventFullDto> updateEvent(@PathVariable(name = "eventId") Long id,
                                                     @Valid @RequestBody UpdateEventAdminRequest eventDto) {
         log.info("Пришел PATCH запрос на /admin/events/{} на Admin Event Controller с телом: {}", id, eventDto);
-        EventFullDto event = eventService.updateEvent(id, eventDto);
+        EventFullDto event = eventService.updateEventByAdmin(id, eventDto);
         log.info("Отправлен ответ PATCH /admin/events/{} с телом: {}", id, event);
         return ResponseEntity.ok(event);
     }
