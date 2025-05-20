@@ -1,20 +1,24 @@
 package ru.practicum.main.service.event.service;
 
 import org.springframework.data.domain.Pageable;
-import ru.practicum.main.service.event.dto.*;
-import ru.practicum.main.service.event.enums.EventSortType;
-import ru.practicum.main.service.event.enums.EventState;
+import ru.practicum.main.service.event.dto.EventFullDto;
+import ru.practicum.main.service.event.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.main.service.event.dto.EventRequestStatusUpdateResult;
+import ru.practicum.main.service.event.dto.EventShortDto;
+import ru.practicum.main.service.event.dto.NewEventDto;
+import ru.practicum.main.service.event.dto.UpdateEventAdminRequest;
+import ru.practicum.main.service.event.dto.UpdateEventUserRequest;
 import ru.practicum.main.service.event.service.param.GetEventAdminParam;
+import ru.practicum.main.service.event.service.param.GetEventUserParam;
 import ru.practicum.main.service.request.dto.ParticipationRequestDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
 
     List<EventFullDto> getEventsByAdmin(GetEventAdminParam param);
 
-    List<EventShortDto> getEventsByUser(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sort, Integer from, Integer size);
+    List<EventShortDto> getEventsByUser(GetEventUserParam param);
 
     EventFullDto getEventForUser(Long userId, Long eventId);
 

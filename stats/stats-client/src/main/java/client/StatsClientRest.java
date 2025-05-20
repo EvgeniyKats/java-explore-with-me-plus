@@ -27,7 +27,8 @@ import static util.StatsServerPaths.PATH_STAT;
 public class StatsClientRest implements StatsClient {
     private final RestClient restClient;
 
-    public StatsClientRest(@Value("${stats-server:" + PATH_BASE + "}") String statsServerUrl) {
+    public StatsClientRest(@Value("${stats.url:" + PATH_BASE + "}") String statsServerUrl) {
+        log.info("stats.url = {}", statsServerUrl);
         restClient = RestClient.builder()
                 .baseUrl(statsServerUrl)
                 .build();

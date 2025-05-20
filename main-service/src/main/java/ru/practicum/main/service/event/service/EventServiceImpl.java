@@ -4,9 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.service.Constants;
@@ -15,12 +13,19 @@ import ru.practicum.main.service.category.repository.CategoryRepository;
 import ru.practicum.main.service.event.EventRepository;
 import ru.practicum.main.service.event.LocationRepository;
 import ru.practicum.main.service.event.MapperEvent;
-import ru.practicum.main.service.event.dto.*;
-import ru.practicum.main.service.event.enums.EventSortType;
+import ru.practicum.main.service.event.dto.EventFullDto;
+import ru.practicum.main.service.event.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.main.service.event.dto.EventRequestStatusUpdateResult;
+import ru.practicum.main.service.event.dto.EventShortDto;
+import ru.practicum.main.service.event.dto.NewEventDto;
+import ru.practicum.main.service.event.dto.UpdateEventAdminRequest;
+import ru.practicum.main.service.event.dto.UpdateEventParam;
+import ru.practicum.main.service.event.dto.UpdateEventUserRequest;
 import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Event;
 import ru.practicum.main.service.event.model.QEvent;
 import ru.practicum.main.service.event.service.param.GetEventAdminParam;
+import ru.practicum.main.service.event.service.param.GetEventUserParam;
 import ru.practicum.main.service.event.util.ResponseEventBuilder;
 import ru.practicum.main.service.exception.BadRequestException;
 import ru.practicum.main.service.exception.ConflictException;
@@ -90,48 +95,37 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getEventsByUser(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sortType, Integer from, Integer size) {
-        Pageable pageable;
-        if (sortType != null) {
-            Sort sort = switch (sortType) {
-                case EVENT_DATE -> Sort.by("createdOn").ascending();
-                case VIEWS -> Sort.by("views").ascending();
-            };
-            pageable = PageRequest.of(from, size, sort);
-        } else {
-            pageable = PageRequest.of(from, size);
-        }
-
+    public List<EventShortDto> getEventsByUser(GetEventUserParam param) {
         QEvent event = QEvent.event;
 
         BooleanBuilder requestBuilder = new BooleanBuilder();
 
         requestBuilder.and(event.state.eq(PUBLISHED));
 
-        if (text != null && !text.isBlank()) {
-            BooleanExpression descriptionExpression = event.description.like(text);
-            BooleanExpression annotationExpression = event.annotation.like(text);
+        if (param.hasText()) {
+            BooleanExpression descriptionExpression = event.description.like(param.getText());
+            BooleanExpression annotationExpression = event.annotation.like(param.getText());
             requestBuilder.andAnyOf(descriptionExpression, annotationExpression);
         }
 
-        if (categories != null && !categories.isEmpty()) {
-            requestBuilder.and(event.category.id.in(categories));
+        if (param.hasCategories()) {
+            requestBuilder.and(event.category.id.in(param.getCategories()));
         }
 
-        if (paid != null) {
-            requestBuilder.and(event.paid.eq(paid));
+        if (param.hasPaid()) {
+            requestBuilder.and(event.paid.eq(param.getPaid()));
         }
 
-        requestBuilder.and(event.eventDate.gt(Objects.requireNonNullElseGet(rangeStart, LocalDateTime::now)));
+        requestBuilder.and(event.eventDate.gt(Objects.requireNonNullElseGet(param.getRangeStart(), LocalDateTime::now)));
 
-        if (rangeEnd != null) {
-            requestBuilder.and(event.eventDate.lt(rangeEnd));
+        if (param.hasRangeEnd()) {
+            requestBuilder.and(event.eventDate.lt(param.getRangeEnd()));
         }
 
-        List<Event> events = eventRepository.findAll(requestBuilder, pageable).getContent();
+        List<Event> events = eventRepository.findAll(requestBuilder, param.getPage()).getContent();
         List<EventShortDto> eventDtos = responseEventBuilder.buildManyEventResponseDto(events, EventShortDto.class);
 
-        if (onlyAvailable) {
+        if (param.getOnlyAvailable()) {
             eventDtos.removeIf(dto -> dto.getConfirmedRequests() == dto.getParticipantLimit());
         }
 

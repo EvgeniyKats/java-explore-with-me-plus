@@ -102,7 +102,7 @@ public class ResponseEventBuilder {
 
     private List<ViewStatsDto> getManyEventsViews(Collection<Long> eventIds) {
         StatParam statParam = new StatParam();
-        statParam.setStart(LocalDateTime.MIN);
+        statParam.setStart(LocalDateTime.of(1970, 1, 1, 1, 1));
         statParam.setEnd(LocalDateTime.now());
         List<String> uris = eventIds.stream()
                 .map(id -> "/events/" + id)

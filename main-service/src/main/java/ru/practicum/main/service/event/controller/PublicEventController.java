@@ -5,6 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,7 @@ import ru.practicum.main.service.event.dto.EventFullDto;
 import ru.practicum.main.service.event.dto.EventShortDto;
 import ru.practicum.main.service.event.enums.EventSortType;
 import ru.practicum.main.service.event.service.EventService;
+import ru.practicum.main.service.event.service.param.GetEventUserParam;
 import ru.practicum.main.service.exception.BadRequestException;
 import ru.practicum.stats.dto.EndpointHitDto;
 
@@ -51,7 +55,29 @@ public class PublicEventController {
         }
         log.info("Пришел GET запрос /events на Public Event Controller");
         doHit(request);
-        List<EventShortDto> events = eventService.getEventsByUser(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+
+        Pageable page;
+        if (sort != null) {
+            Sort sortType = switch (sort) {
+                case EVENT_DATE -> Sort.by("createdOn").ascending();
+                case VIEWS -> Sort.by("views").ascending();
+            };
+            page = PageRequest.of(from, size, sortType);
+        } else {
+            page = PageRequest.of(from, size);
+        }
+
+        GetEventUserParam param = GetEventUserParam.builder()
+                .text(text)
+                .categories(categories)
+                .paid(paid)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .onlyAvailable(onlyAvailable)
+                .page(page)
+                .build();
+
+        List<EventShortDto> events = eventService.getEventsByUser(param);
         log.info("Отправлен ответ на GET /events Public Event Controller с телом: {}", events);
         return ResponseEntity.ok(events);
     }
