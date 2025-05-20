@@ -1,7 +1,6 @@
 package ru.practicum.main.service.event.controller;
 
 import client.StatsClient;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;

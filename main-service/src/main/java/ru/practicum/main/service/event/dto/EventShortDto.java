@@ -1,6 +1,7 @@
 package ru.practicum.main.service.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -39,4 +40,7 @@ public class EventShortDto implements ResponseEvent {
     private String title;
 
     private long views;
+
+    @JsonIgnore
+    private int participantLimit;
 }

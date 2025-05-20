@@ -83,7 +83,7 @@ public class RequestServiceImpl implements RequestService {
             throw new NotFoundException("Пользователь не найден");
         }
 
-        request.setStatus(RequestStatus.REJECTED);
+        request.setStatus(RequestStatus.CANCELED);
 
         request = requestRepository.save(request);
 

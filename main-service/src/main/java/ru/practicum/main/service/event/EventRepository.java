@@ -16,14 +16,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     @Query(value = """
             SELECT e
-            FROM Event e WHERE (:text IS NULL OR e.annotation LIKE :text OR e.description LIKE :text) AND (:categories IS NULL OR e.category.id IN :categories) AND (:paid IS NULL OR e.paid = paid)
-            AND (:rangeStart IS NULL OR e.createdOn > :rangeStart) AND (:rangeEnd IS NULL OR e.createdOn < :rangeEnd) AND (:onlyAvailable = false OR e.confirmedRequests < e.participantLimit)
-            """, nativeQuery = true)
-    List<Event> getEventsWithFilters(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, Pageable pageable);
-
-
-    @Query(value = """
-            SELECT e
             FROM Event e WHERE (:users IS NULL OR e.initiator.id IN :users) AND (:states IS NULL OR e.state IN :states) AND (:categories IS NULL OR e.category.id IN :categories) AND (:rangeStart IS NULL OR e.createdOn > :rangeStart)
             AND (:rangeEnd IS NULL OR e.createdOn < :rangeEnd)
             """)

@@ -34,8 +34,6 @@ public interface MapperEvent {
 
     UpdateEventParam toUpdateParam(UpdateEventUserRequest request);
 
-
-
     @Named("stateFromAdminAction")
     default EventState stateFromAdminAction(UpdateEventAdminRequest.StateAction action) {
         if (action == null) {
