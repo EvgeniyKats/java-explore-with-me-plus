@@ -17,6 +17,7 @@ import ru.practicum.main.service.event.dto.EventFullDto;
 import ru.practicum.main.service.event.dto.EventShortDto;
 import ru.practicum.main.service.event.enums.EventSortType;
 import ru.practicum.main.service.event.service.EventService;
+import ru.practicum.main.service.exception.BadRequestException;
 import ru.practicum.stats.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
@@ -45,6 +46,9 @@ public class PublicEventController {
                                                                   @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                                   @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size,
                                                                   HttpServletRequest request) {
+        if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
+            throw new BadRequestException("rangeStart > rangeEnd");
+        }
         log.info("Пришел GET запрос /events на Public Event Controller");
         doHit(request);
         List<EventShortDto> events = eventService.getEventsByUser(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);

@@ -24,12 +24,11 @@ public interface RequestRepository extends JpaRepository<Request, Long>, Queryds
     int countByEventIdAndStatus(Long eventId, RequestStatus requestStatus);
 
     @Query("""
-            SELECT r.event.id AS eventId,
-                   COUNT(r.requester) AS countRequests
+            SELECT new ru.practicum.main.service.request.model.ConfirmedRequests(r.event.id, CAST(COUNT(r.requester) AS INTEGER))
             FROM Request r
             WHERE r.event.id IN :eventIds AND r.status = :status
             GROUP BY r.event.id
             """)
-    List<ConfirmedRequests> findManyConfirmedRequests(@Param("eventIds") Collection<Long> eventIds,
-                                                      @Param("status") RequestStatus status);
+    List<ConfirmedRequests> getConfirmedRequests(@Param("eventIds") Collection<Long> eventIds,
+                                                 @Param("status") RequestStatus status);
 }

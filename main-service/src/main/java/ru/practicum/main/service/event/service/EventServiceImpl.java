@@ -21,6 +21,7 @@ import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Event;
 import ru.practicum.main.service.event.model.QEvent;
 import ru.practicum.main.service.event.util.ResponseEventBuilder;
+import ru.practicum.main.service.exception.BadRequestException;
 import ru.practicum.main.service.exception.ConflictException;
 import ru.practicum.main.service.exception.NotFoundException;
 import ru.practicum.main.service.request.MapperRequest;
@@ -73,7 +74,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventMapper.toEvent(eventDto);
 
         if (isEventTimeBad(eventDto.getEventDate(), 2)) {
-            throw new ConflictException("Дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента");
+            throw new BadRequestException("Дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента");
         }
 
         Category category = categoryRepository.findById(eventDto.getCategory()).orElseThrow(
@@ -104,12 +105,12 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND));
 
-        if (updateDto.hasStateAction()) {
-            EventState state = event.getState();
-            if (state != PENDING && state != CANCELED) {
-                throw new ConflictException("Изменить можно только отмененные события или события в состоянии ожидания модерации");
-            }
+        EventState state = event.getState();
+        if (state != PENDING && state != REJECTED) {
+            throw new ConflictException("Изменить можно только отмененные события или события в состоянии ожидания модерации");
+        }
 
+        if (updateDto.hasStateAction()) {
             if (updateDto.getStateAction().equals(SEND_TO_REVIEW)) {
                 event.setState(PENDING);
             } else {
@@ -119,7 +120,7 @@ public class EventServiceImpl implements EventService {
 
         if (updateDto.hasEventDate()) {
             if (isEventTimeBad(updateDto.getEventDate(), 2)) {
-                throw new ConflictException("Дата начала изменяемого события должна быть не ранее чем за 2 часа от даты публикации");
+                throw new BadRequestException("Дата начала изменяемого события должна быть не ранее чем за 2 часа от даты публикации");
             }
             event.setEventDate(updateDto.getEventDate());
         }
@@ -205,15 +206,22 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getEventsByUser(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sortType, Integer from, Integer size) {
-        Sort sort = switch (sortType) {
-            case EVENT_DATE -> Sort.by("createdOn").ascending();
-            case VIEWS -> Sort.by("views").ascending();
-        };
+        Pageable pageable;
+        if (sortType != null) {
+            Sort sort = switch (sortType) {
+                case EVENT_DATE -> Sort.by("createdOn").ascending();
+                case VIEWS -> Sort.by("views").ascending();
+            };
+            pageable = PageRequest.of(from, size, sort);
+        } else {
+            pageable = PageRequest.of(from, size);
+        }
 
-        Pageable pageable = PageRequest.of(from, size, sort);
         QEvent event = QEvent.event;
 
         BooleanBuilder requestBuilder = new BooleanBuilder();
+
+        requestBuilder.and(event.state.eq(PUBLISHED));
 
         if (text != null && !text.isBlank()) {
             BooleanExpression descriptionExpression = event.description.like(text);
@@ -247,7 +255,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventById(Long eventId) {
-        Event eventDomain = eventRepository.findById(eventId)
+        Event eventDomain = eventRepository.findByIdAndState(eventId, PUBLISHED)
                 .orElseThrow(() -> new NotFoundException(Constants.EVENT_NOT_FOUND));
         return responseEventBuilder.buildOneEventResponseDto(eventDomain, EventFullDto.class);
     }
@@ -287,11 +295,11 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(Constants.EVENT_NOT_FOUND));
 
-        if (updateDto.hasStateAction()) {
-            if (event.getState() != EventState.PENDING) {
-                throw new ConflictException("Изменить можно только отмененные события или события в состоянии ожидания модерации");
-            }
+        if (event.getState() != EventState.PENDING) {
+            throw new ConflictException("Изменить можно только PENDING события (ожидающие модерацию)");
+        }
 
+        if (updateDto.hasStateAction()) {
             EventState state;
 
             if (updateDto.getStateAction() == PUBLISH_EVENT) {
@@ -306,7 +314,7 @@ public class EventServiceImpl implements EventService {
 
         if (updateDto.hasEventDate()) {
             if (isEventTimeBad(updateDto.getEventDate(), 1)) {
-                throw new ConflictException("Дата начала изменяемого события должна быть не ранее чем за час от даты публикации");
+                throw new BadRequestException("Дата начала изменяемого события должна быть не ранее чем за час от даты публикации");
             }
             event.setEventDate(updateDto.getEventDate());
         }

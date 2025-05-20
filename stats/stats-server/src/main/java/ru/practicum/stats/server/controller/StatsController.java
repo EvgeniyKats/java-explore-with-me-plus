@@ -34,7 +34,7 @@ public class StatsController {
                                                                defaultValue = "false") Boolean unique) {
         log.info("Пришел запрос на сервер статистики GET /stats");
         List<ViewStatsDto> stats = statService.getStats(start, end, uris, unique);
-        log.info("Статистика собрана. GET /stats отработал без ошибок");
+        log.info("Статистика собрана. GET /stats отработал без ошибок, size = {}", stats.size());
         return new ResponseEntity<>(stats, HttpStatus.OK);
     }
 

@@ -70,7 +70,7 @@ public class ResponseEventBuilder {
 
 
         getManyEventsViews(dtoById.keySet()).forEach(stats -> {
-            Long id = Long.parseLong(stats.getUri().replace("events/", ""));
+            Long id = Long.parseLong(stats.getUri().replace("/events/", ""));
             dtoById.get(id).setViews(stats.getHits());
         });
 
@@ -83,9 +83,10 @@ public class ResponseEventBuilder {
 
     private long getOneEventViews(LocalDateTime created, long eventId) {
         StatParam statParam = new StatParam();
-        statParam.setStart(created);
-        statParam.setEnd(LocalDateTime.now());
-        statParam.setUris(List.of("events/" + eventId));
+        statParam.setStart(created.minusMinutes(1));
+        statParam.setEnd(LocalDateTime.now().plusMinutes(1));
+        statParam.setUris(List.of("/events/" + eventId));
+        statParam.setUnique(true);
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
         log.debug("Получен {} одиночный от статистики по запросу uris = {}, start = {}",
@@ -96,7 +97,7 @@ public class ResponseEventBuilder {
     }
 
     private List<ConfirmedRequests> getManyEventsConfirmedRequests(Collection<Long> eventIds) {
-        return requestRepository.findManyConfirmedRequests(eventIds, RequestStatus.CONFIRMED);
+        return requestRepository.getConfirmedRequests(eventIds, RequestStatus.CONFIRMED);
     }
 
     private List<ViewStatsDto> getManyEventsViews(Collection<Long> eventIds) {
@@ -104,7 +105,7 @@ public class ResponseEventBuilder {
         statParam.setStart(LocalDateTime.MIN);
         statParam.setEnd(LocalDateTime.now());
         List<String> uris = eventIds.stream()
-                .map(id -> "events/" + id)
+                .map(id -> "/events/" + id)
                 .toList();
 
         statParam.setUris(uris);

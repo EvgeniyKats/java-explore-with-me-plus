@@ -45,7 +45,7 @@ public class PrivateRequestController {
     }
 
     @PatchMapping("/{requestId}/cancel")
-    public ParticipationRequestDto updateParticipationRequest(@Min(1) @PathVariable Long userId,
+    public ParticipationRequestDto cancelParticipationRequest(@Min(1) @PathVariable Long userId,
                                                               @Min(1) @PathVariable Long requestId) {
         log.info("Получен PATCH /users/{}/requests , eventId = {}", userId, requestId);
         ParticipationRequestDto participationRequest = requestService.cancelParticipationRequest(userId, requestId);

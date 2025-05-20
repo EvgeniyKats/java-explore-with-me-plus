@@ -3,6 +3,7 @@ package ru.practicum.main.service.event;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Event;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long initiatorId);
 
     Set<Event> findByIdIn(Set<Long> events);
+
+    Optional<Event> findByIdAndState(Long eventId, EventState state);
 }

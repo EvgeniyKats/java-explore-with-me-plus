@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.main.service.event.enums.EventState;
@@ -38,7 +39,8 @@ public class NewEventDto {
 
     private Boolean paid = false;
 
-    private Integer participantLimit;
+    @PositiveOrZero
+    private Integer participantLimit = 0;
 
     private Boolean requestModeration = true;
 
