@@ -17,7 +17,6 @@ import ru.practicum.main.service.event.model.Event;
 import ru.practicum.main.service.event.model.QEvent;
 import ru.practicum.main.service.exception.NotFoundException;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -46,10 +45,10 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto getCompilationById(Long compId) {
-        log.trace("Попытка получить подборку по id = {}", compId);
+        log.trace("Попытка получить подборку по eventId = {}", compId);
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id = " + compId + " не найдена"));
-        log.trace("Подборка с id = {} найдена", compId);
+                .orElseThrow(() -> new NotFoundException("Подборка с eventId = " + compId + " не найдена"));
+        log.trace("Подборка с eventId = {} найдена", compId);
         return mapperCompilation.toCompilationDto(compilation);
     }
 
@@ -58,8 +57,10 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
         log.trace("Попытка создать новую подборку");
         Compilation compilation = mapperCompilation.toCompilation(newCompilationDto);
+        Set<Event> events = eventRepository.findByIdIn(newCompilationDto.getEvents());
+        compilation.setEvents(events);
         compilationRepository.save(compilation);
-        log.trace("Успешно сохранена подборка, id = {}", compilation.getId());
+        log.trace("Успешно сохранена подборка, eventId = {}", compilation.getId());
         return mapperCompilation.toCompilationDto(compilation);
     }
 
@@ -68,7 +69,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto updateCompilation(UpdateCompilationRequest updateCompilationRequest, Long compId) {
         log.trace("Попытка обновить подборку");
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id = " + compId + " не найдена"));
+                .orElseThrow(() -> new NotFoundException("Подборка с eventId = " + compId + " не найдена"));
 
         if (updateCompilationRequest.hasEvents()) {
             log.trace("Необходимо обновить events");
@@ -87,9 +88,8 @@ public class CompilationServiceImpl implements CompilationService {
             }
             log.trace("Количество events совпало с количеством в базе, обновляется база");
 
-            Set<Event> newEvents = new HashSet<>();
-            eventsInDb.forEach(newEvents::add);
-            compilation.setEvents(newEvents);
+            compilation.getEvents().clear();
+            eventsInDb.forEach(compilation.getEvents()::add);
         }
 
         if (updateCompilationRequest.hasTitle()
@@ -110,11 +110,11 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public void deleteCompilation(Long compId) {
-        log.trace("Попытка удалить подборку с id = {}", compId);
+        log.trace("Попытка удалить подборку с eventId = {}", compId);
         compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id = " + compId + " не найдена"));
+                .orElseThrow(() -> new NotFoundException("Подборка с eventId = " + compId + " не найдена"));
 
         compilationRepository.deleteById(compId);
-        log.trace("Подборка с id = {} успешно удалена", compId);
+        log.trace("Подборка с eventId = {} успешно удалена", compId);
     }
 }

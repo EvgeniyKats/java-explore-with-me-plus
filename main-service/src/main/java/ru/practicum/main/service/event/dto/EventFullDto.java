@@ -15,12 +15,14 @@ import ru.practicum.main.service.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.main.service.Constants.DATE_PATTERN;
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventFullDto {
+public class EventFullDto implements ResponseEvent {
     private Long id;
 
     @NotBlank
@@ -41,18 +43,18 @@ public class EventFullDto {
     @NotNull
     private CategoryDto category;
 
-    private Long confirmedRequests;
+    private int confirmedRequests;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_PATTERN)
     private LocalDateTime createdOn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_PATTERN)
     private LocalDateTime publishedOn;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_PATTERN)
     private LocalDateTime eventDate;
 
-    private Integer participantLimit = 0;
+    private int participantLimit = 0;
 
     private String description;
 
@@ -60,5 +62,5 @@ public class EventFullDto {
 
     private EventState state;
 
-    private Long views;
+    private long views;
 }

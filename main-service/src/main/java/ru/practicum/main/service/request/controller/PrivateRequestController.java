@@ -3,6 +3,7 @@ package ru.practicum.main.service.request.controller;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.main.service.request.dto.ParticipationRequestDto;
 import ru.practicum.main.service.request.service.RequestService;
@@ -33,6 +35,7 @@ public class PrivateRequestController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto createParticipationRequest(@Min(1) @PathVariable Long userId,
                                                               @Min(1) @RequestParam Long eventId) {
         log.info("Получен POST /users/{}/requests , eventId = {}", userId, eventId);
@@ -42,7 +45,7 @@ public class PrivateRequestController {
     }
 
     @PatchMapping("/{requestId}/cancel")
-    public ParticipationRequestDto updateParticipationRequest(@Min(1) @PathVariable Long userId,
+    public ParticipationRequestDto cancelParticipationRequest(@Min(1) @PathVariable Long userId,
                                                               @Min(1) @PathVariable Long requestId) {
         log.info("Получен PATCH /users/{}/requests , eventId = {}", userId, requestId);
         ParticipationRequestDto participationRequest = requestService.cancelParticipationRequest(userId, requestId);

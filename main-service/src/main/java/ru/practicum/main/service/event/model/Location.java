@@ -1,5 +1,8 @@
 package ru.practicum.main.service.event.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,19 +29,23 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Location {
 
+    @JsonIgnore
     @Id
     @Column(name = "event_id", nullable = false)
     Long eventId;
 
+    @JsonProperty(value = "lat")
     @Column(nullable = false)
     Double latitude;
 
+    @JsonProperty(value = "lon")
     @Column(nullable = false)
     Double longitude;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @MapsId
-    @JoinColumn(name = "eventId")
+    @JoinColumn(name = "eventId", referencedColumnName = "eventId")
     Event event;
 
 }

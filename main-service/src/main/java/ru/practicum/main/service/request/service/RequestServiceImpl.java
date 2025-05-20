@@ -52,7 +52,9 @@ public class RequestServiceImpl implements RequestService {
             throw new ConflictException("Невозможно создать запрос на неопубликованное событие");
         }
 
-        if (requestRepository.countByEventId((eventId)) >= event.getParticipantLimit()) {
+
+        if (event.getParticipantLimit() != 0 && requestRepository.countByEventIdAndStatus(eventId, RequestStatus.CONFIRMED)
+                                                >= event.getParticipantLimit()) {
             throw new ConflictException("Достигнут лимит запросов на событие");
         }
 
@@ -60,11 +62,12 @@ public class RequestServiceImpl implements RequestService {
             throw new ConflictException("Невозможно создать запрос будучи инициатором события");
         }
 
+        boolean isPreModerationOn = isPreModerationOn(event.getRequestModeration(), event.getParticipantLimit());
         Request request = new Request(
                 null,
                 user,
                 event,
-                event.getRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED,
+                isPreModerationOn ? RequestStatus.PENDING : RequestStatus.CONFIRMED,
                 LocalDateTime.now()
         );
 
@@ -83,10 +86,14 @@ public class RequestServiceImpl implements RequestService {
             throw new NotFoundException("Пользователь не найден");
         }
 
-        request.setStatus(RequestStatus.REJECTED);
+        request.setStatus(RequestStatus.CANCELED);
 
         request = requestRepository.save(request);
 
         return mapperRequest.toParticipationRequestDto(request);
+    }
+
+    private boolean isPreModerationOn(boolean moderationStatus, int limit) {
+        return moderationStatus && limit != 0;
     }
 }

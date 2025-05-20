@@ -49,7 +49,7 @@ public class PublicCompilationController {
     public CompilationDto getCompilation(@Min(1) @PathVariable Long compId) {
         log.info("Получен GET /compilations {}", compId);
         CompilationDto compilation = compilationService.getCompilationById(compId);
-        log.info("Найден compilation с id = {}", compId);
+        log.info("Найден compilation с eventId = {}", compId);
         return compilation;
     }
 }

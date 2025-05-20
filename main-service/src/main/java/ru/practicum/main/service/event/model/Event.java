@@ -84,8 +84,8 @@ public class Event {
     Location location;
 
     @Transient
-    Long views; // TODO заполнять (из статистики) перед конвертацией в CompilationDto
+    Long views;
 
     @Transient
-    Long confirmedRequests; // TODO заполнять перед конвертацией в CompilationDto/EventFullDto/EventShortDto
+    Long confirmedRequests;
 }

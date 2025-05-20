@@ -13,5 +13,5 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
-stats-server:
+stats:
   url: http://localhost:9090
