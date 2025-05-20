@@ -62,7 +62,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getAllUsersEvents(Long userId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size);
-        List<Event> events = eventRepository.getUserEvents(userId, pageable);
+        List<Event> events = eventRepository.findByInitiatorId(userId, pageable);
 
         return responseEventBuilder.buildManyEventResponseDto(events, EventShortDto.class);
     }
@@ -204,7 +204,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getEventsByFilters(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sortType, Integer from, Integer size) {
+    public List<EventShortDto> getEventsByUser(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sortType, Integer from, Integer size) {
         Sort sort = switch (sortType) {
             case EVENT_DATE -> Sort.by("createdOn").ascending();
             case VIEWS -> Sort.by("views").ascending();
@@ -253,10 +253,31 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> getEventsWithFilters(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
+    public List<EventFullDto> getEventsByAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size);
-        List<Event> events = eventRepository.getEventsWithFiltersAdmin(users, states, categories, rangeStart, rangeEnd, pageable);
+        QEvent event = QEvent.event;
+        BooleanBuilder requestBuilder = new BooleanBuilder();
+        if (users != null && !users.isEmpty()) {
+            requestBuilder.and(event.initiator.id.in(users));
+        }
 
+        if (states != null && !states.isEmpty()) {
+            requestBuilder.and(event.state.in(states));
+        }
+
+        if (categories != null && !categories.isEmpty()) {
+            requestBuilder.and(event.category.id.in(categories));
+        }
+
+        if (rangeStart != null) {
+            requestBuilder.and(event.createdOn.gt(rangeStart));
+        }
+
+        if (rangeEnd != null) {
+            requestBuilder.and(event.createdOn.lt(rangeEnd));
+        }
+
+        List<Event> events = eventRepository.findAll(requestBuilder, pageable).getContent();
         return responseEventBuilder.buildManyEventResponseDto(events, EventFullDto.class);
     }
 

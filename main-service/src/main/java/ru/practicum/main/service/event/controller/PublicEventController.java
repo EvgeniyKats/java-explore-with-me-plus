@@ -47,7 +47,7 @@ public class PublicEventController {
                                                                   HttpServletRequest request) {
         log.info("Пришел GET запрос /events на Public Event Controller");
         doHit(request);
-        List<EventShortDto> events = eventService.getEventsByFilters(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        List<EventShortDto> events = eventService.getEventsByUser(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         log.info("Отправлен ответ на GET /events Public Event Controller с телом: {}", events);
         return ResponseEntity.ok(events);
     }

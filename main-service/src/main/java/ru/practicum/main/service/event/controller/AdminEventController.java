@@ -37,7 +37,7 @@ public class AdminEventController {
                                                              @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                              @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
         log.info("Пришел GET запрос /admin/events на Admin Event Controller");
-        List<EventFullDto> events = eventService.getEventsWithFilters(users, states, categories, rangeStart, rangeEnd, from, size);
+        List<EventFullDto> events = eventService.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
         log.info("Отправлен ответ GET /admin/events с телом: {}", events);
         return ResponseEntity.ok(events);
     }

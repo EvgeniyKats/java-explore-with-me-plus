@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface EventService {
 
-    List<EventFullDto> getEventsWithFilters(List<Long> users, List<EventState> states,
-                                            List<Long> categories, LocalDateTime rangeStart,
-                                            LocalDateTime rangeEnd, Integer from, Integer size);
+    List<EventFullDto> getEventsByAdmin(List<Long> users, List<EventState> states,
+                                        List<Long> categories, LocalDateTime rangeStart,
+                                        LocalDateTime rangeEnd, Integer from, Integer size);
 
     EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest eventDto);
 
@@ -28,7 +28,7 @@ public interface EventService {
 
     EventRequestStatusUpdateResult updateEventRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest);
 
-    List<EventShortDto> getEventsByFilters(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sort, Integer from, Integer size);
+    List<EventShortDto> getEventsByUser(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sort, Integer from, Integer size);
 
     EventFullDto getEventById(Long eventId);
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class ValidatorEventTime {
     /**
      * @param time - checked time
-     * @param hours - countRequests of hours after which the date will be good
+     * @param hours - count of hours after which the date will be good
      */
     public static boolean isEventTimeBad(LocalDateTime time, int hours) {
         return time.plusHours(hours).isBefore(LocalDateTime.now());
