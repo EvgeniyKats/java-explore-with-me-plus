@@ -7,6 +7,7 @@ import ru.practicum.main.service.event.model.Event;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPredicateExecutor<Event> {
     Boolean existsByCategoryId(Long catId);
@@ -14,4 +15,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
     List<Event> findByInitiatorId(Long userId, Pageable pageable);
 
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long initiatorId);
+
+    Set<Event> findByIdIn(Set<Long> events);
 }

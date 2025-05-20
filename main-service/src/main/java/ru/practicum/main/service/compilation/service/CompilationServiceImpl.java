@@ -17,7 +17,6 @@ import ru.practicum.main.service.event.model.Event;
 import ru.practicum.main.service.event.model.QEvent;
 import ru.practicum.main.service.exception.NotFoundException;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -58,6 +57,8 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
         log.trace("Попытка создать новую подборку");
         Compilation compilation = mapperCompilation.toCompilation(newCompilationDto);
+        Set<Event> events = eventRepository.findByIdIn(newCompilationDto.getEvents());
+        compilation.setEvents(events);
         compilationRepository.save(compilation);
         log.trace("Успешно сохранена подборка, eventId = {}", compilation.getId());
         return mapperCompilation.toCompilationDto(compilation);
@@ -87,9 +88,8 @@ public class CompilationServiceImpl implements CompilationService {
             }
             log.trace("Количество events совпало с количеством в базе, обновляется база");
 
-            Set<Event> newEvents = new HashSet<>();
-            eventsInDb.forEach(newEvents::add);
-            compilation.setEvents(newEvents);
+            compilation.getEvents().clear();
+            eventsInDb.forEach(compilation.getEvents()::add);
         }
 
         if (updateCompilationRequest.hasTitle()
