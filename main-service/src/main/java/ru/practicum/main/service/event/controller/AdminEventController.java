@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import ru.practicum.main.service.event.dto.EventFullDto;
 import ru.practicum.main.service.event.dto.UpdateEventAdminRequest;
 import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.service.EventService;
+import ru.practicum.main.service.event.service.param.GetEventAdminParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,7 +39,17 @@ public class AdminEventController {
                                                              @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                              @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
         log.info("Пришел GET запрос /admin/events на Admin Event Controller");
-        List<EventFullDto> events = eventService.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
+
+        GetEventAdminParam param = GetEventAdminParam.builder()
+                .users(users)
+                .states(states)
+                .categories(categories)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .page(PageRequest.of(from, size))
+                .build();
+
+        List<EventFullDto> events = eventService.getEventsByAdmin(param);
         log.info("Отправлен ответ GET /admin/events с телом: {}", events);
         return ResponseEntity.ok(events);
     }

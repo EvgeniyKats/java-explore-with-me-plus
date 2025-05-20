@@ -20,6 +20,7 @@ import ru.practicum.main.service.event.enums.EventSortType;
 import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Event;
 import ru.practicum.main.service.event.model.QEvent;
+import ru.practicum.main.service.event.service.param.GetEventAdminParam;
 import ru.practicum.main.service.event.util.ResponseEventBuilder;
 import ru.practicum.main.service.exception.BadRequestException;
 import ru.practicum.main.service.exception.ConflictException;
@@ -61,10 +62,85 @@ public class EventServiceImpl implements EventService {
     private final ResponseEventBuilder responseEventBuilder;
 
     @Override
-    public List<EventShortDto> getAllUsersEvents(Long userId, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from, size);
-        List<Event> events = eventRepository.findByInitiatorId(userId, pageable);
+    public List<EventFullDto> getEventsByAdmin(GetEventAdminParam param) {
+        QEvent event = QEvent.event;
+        BooleanBuilder requestBuilder = new BooleanBuilder();
+        if (param.hasUsers()) {
+            requestBuilder.and(event.initiator.id.in(param.getUsers()));
+        }
 
+        if (param.hasStates()) {
+            requestBuilder.and(event.state.in(param.getStates()));
+        }
+
+        if (param.hasCategories()) {
+            requestBuilder.and(event.category.id.in(param.getCategories()));
+        }
+
+        if (param.hasRangeStart()) {
+            requestBuilder.and(event.createdOn.gt(param.getRangeStart()));
+        }
+
+        if (param.hasRangeEnd()) {
+            requestBuilder.and(event.createdOn.lt(param.getRangeEnd()));
+        }
+
+        List<Event> events = eventRepository.findAll(requestBuilder, param.getPage()).getContent();
+        return responseEventBuilder.buildManyEventResponseDto(events, EventFullDto.class);
+    }
+
+    @Override
+    public List<EventShortDto> getEventsByUser(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sortType, Integer from, Integer size) {
+        Pageable pageable;
+        if (sortType != null) {
+            Sort sort = switch (sortType) {
+                case EVENT_DATE -> Sort.by("createdOn").ascending();
+                case VIEWS -> Sort.by("views").ascending();
+            };
+            pageable = PageRequest.of(from, size, sort);
+        } else {
+            pageable = PageRequest.of(from, size);
+        }
+
+        QEvent event = QEvent.event;
+
+        BooleanBuilder requestBuilder = new BooleanBuilder();
+
+        requestBuilder.and(event.state.eq(PUBLISHED));
+
+        if (text != null && !text.isBlank()) {
+            BooleanExpression descriptionExpression = event.description.like(text);
+            BooleanExpression annotationExpression = event.annotation.like(text);
+            requestBuilder.andAnyOf(descriptionExpression, annotationExpression);
+        }
+
+        if (categories != null && !categories.isEmpty()) {
+            requestBuilder.and(event.category.id.in(categories));
+        }
+
+        if (paid != null) {
+            requestBuilder.and(event.paid.eq(paid));
+        }
+
+        requestBuilder.and(event.eventDate.gt(Objects.requireNonNullElseGet(rangeStart, LocalDateTime::now)));
+
+        if (rangeEnd != null) {
+            requestBuilder.and(event.eventDate.lt(rangeEnd));
+        }
+
+        List<Event> events = eventRepository.findAll(requestBuilder, pageable).getContent();
+        List<EventShortDto> eventDtos = responseEventBuilder.buildManyEventResponseDto(events, EventShortDto.class);
+
+        if (onlyAvailable) {
+            eventDtos.removeIf(dto -> dto.getConfirmedRequests() == dto.getParticipantLimit());
+        }
+
+        return eventDtos;
+    }
+
+    @Override
+    public List<EventShortDto> getAllUsersEvents(Long userId, Pageable page) {
+        List<Event> events = eventRepository.findByInitiatorId(userId, page);
         return responseEventBuilder.buildManyEventResponseDto(events, EventShortDto.class);
     }
 
@@ -93,7 +169,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEventsByUserIdByEventId(Long userId, Long eventId) {
+    public EventFullDto getEventForUser(Long userId, Long eventId) {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND));
         return responseEventBuilder.buildOneEventResponseDto(event, EventFullDto.class);
@@ -205,88 +281,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getEventsByUser(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, EventSortType sortType, Integer from, Integer size) {
-        Pageable pageable;
-        if (sortType != null) {
-            Sort sort = switch (sortType) {
-                case EVENT_DATE -> Sort.by("createdOn").ascending();
-                case VIEWS -> Sort.by("views").ascending();
-            };
-            pageable = PageRequest.of(from, size, sort);
-        } else {
-            pageable = PageRequest.of(from, size);
-        }
-
-        QEvent event = QEvent.event;
-
-        BooleanBuilder requestBuilder = new BooleanBuilder();
-
-        requestBuilder.and(event.state.eq(PUBLISHED));
-
-        if (text != null && !text.isBlank()) {
-            BooleanExpression descriptionExpression = event.description.like(text);
-            BooleanExpression annotationExpression = event.annotation.like(text);
-            requestBuilder.andAnyOf(descriptionExpression, annotationExpression);
-        }
-
-        if (categories != null && !categories.isEmpty()) {
-            requestBuilder.and(event.category.id.in(categories));
-        }
-
-        if (paid != null) {
-            requestBuilder.and(event.paid.eq(paid));
-        }
-
-        requestBuilder.and(event.eventDate.gt(Objects.requireNonNullElseGet(rangeStart, LocalDateTime::now)));
-
-        if (rangeEnd != null) {
-            requestBuilder.and(event.eventDate.lt(rangeEnd));
-        }
-
-        List<Event> events = eventRepository.findAll(requestBuilder, pageable).getContent();
-        List<EventShortDto> eventDtos = responseEventBuilder.buildManyEventResponseDto(events, EventShortDto.class);
-
-        if (onlyAvailable) {
-            eventDtos.removeIf(dto -> dto.getConfirmedRequests() == dto.getParticipantLimit());
-        }
-
-        return eventDtos;
-    }
-
-    @Override
     public EventFullDto getEventById(Long eventId) {
         Event eventDomain = eventRepository.findByIdAndState(eventId, PUBLISHED)
                 .orElseThrow(() -> new NotFoundException(Constants.EVENT_NOT_FOUND));
         return responseEventBuilder.buildOneEventResponseDto(eventDomain, EventFullDto.class);
-    }
-
-    @Override
-    public List<EventFullDto> getEventsByAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
-        Pageable pageable = PageRequest.of(from, size);
-        QEvent event = QEvent.event;
-        BooleanBuilder requestBuilder = new BooleanBuilder();
-        if (users != null && !users.isEmpty()) {
-            requestBuilder.and(event.initiator.id.in(users));
-        }
-
-        if (states != null && !states.isEmpty()) {
-            requestBuilder.and(event.state.in(states));
-        }
-
-        if (categories != null && !categories.isEmpty()) {
-            requestBuilder.and(event.category.id.in(categories));
-        }
-
-        if (rangeStart != null) {
-            requestBuilder.and(event.createdOn.gt(rangeStart));
-        }
-
-        if (rangeEnd != null) {
-            requestBuilder.and(event.createdOn.lt(rangeEnd));
-        }
-
-        List<Event> events = eventRepository.findAll(requestBuilder, pageable).getContent();
-        return responseEventBuilder.buildManyEventResponseDto(events, EventFullDto.class);
     }
 
     @Override

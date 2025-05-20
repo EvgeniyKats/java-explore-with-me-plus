@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,7 +31,7 @@ public class PrivateEventController {
                                                                @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                                @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
         log.info("Пришел GET запрос на /users/{}/events", userId);
-        List<EventShortDto> events = eventService.getAllUsersEvents(userId, from, size);
+        List<EventShortDto> events = eventService.getAllUsersEvents(userId, PageRequest.of(from, size));
         log.info("Отправлен ответ GET /users/{}/events с телом: {}", userId, events);
         return ResponseEntity.ok(events);
     }
@@ -47,7 +49,7 @@ public class PrivateEventController {
     public ResponseEntity<EventFullDto> getEventById(@PathVariable(name = "userId") Long userId,
                                                      @PathVariable(name = "eventId") Long eventId) {
         log.info("Пришел GET запрос на /users/{}/events/{}", userId, eventId);
-        EventFullDto event = eventService.getEventsByUserIdByEventId(userId, eventId);
+        EventFullDto event = eventService.getEventForUser(userId, eventId);
         log.info("Отправлен ответ на GET /users/{}/events/{} с телом: {}", userId, eventId, event);
         return ResponseEntity.ok(event);
     }
