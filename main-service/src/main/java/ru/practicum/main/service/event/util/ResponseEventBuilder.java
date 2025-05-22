@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.practicum.main.service.Constants.MIN_START_DATE;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -51,9 +53,6 @@ public class ResponseEventBuilder {
 
     public <T extends ResponseEvent> List<T> buildManyEventResponseDto(List<Event> events, Class<T> type) {
         Map<Long, T> dtoById = new HashMap<>();
-
-        if (type == null) throw new RuntimeException();
-
 
         for (Event event : events) {
             if (type == EventFullDto.class) {
@@ -85,8 +84,8 @@ public class ResponseEventBuilder {
         StatParam statParam = new StatParam();
         statParam.setStart(created.minusMinutes(1));
         statParam.setEnd(LocalDateTime.now().plusMinutes(1));
-        statParam.setUris(List.of("/events/" + eventId));
         statParam.setUnique(true);
+        statParam.setUris(List.of("/events/" + eventId));
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
         log.debug("Получен {} одиночный от статистики по запросу uris = {}, start = {}",
@@ -102,8 +101,9 @@ public class ResponseEventBuilder {
 
     private List<ViewStatsDto> getManyEventsViews(Collection<Long> eventIds) {
         StatParam statParam = new StatParam();
-        statParam.setStart(LocalDateTime.of(1970, 1, 1, 1, 1));
-        statParam.setEnd(LocalDateTime.now());
+        statParam.setStart(MIN_START_DATE);
+        statParam.setEnd(LocalDateTime.now().plusMinutes(1));
+        statParam.setUnique(true);
         List<String> uris = eventIds.stream()
                 .map(id -> "/events/" + id)
                 .toList();
@@ -111,10 +111,11 @@ public class ResponseEventBuilder {
         statParam.setUris(uris);
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
-        log.debug("Получен {} массовый от статистики по запросу uris = {}, start = {}",
-                LocalDateTime.MIN,
+        log.debug("Получен ответ size = {}, массовый от статистики по запросу uris = {}, start = {}, end = {}",
+                viewStats.size(),
                 statParam.getUris(),
-                statParam.getStart());
+                statParam.getStart(),
+                statParam.getEnd());
         return viewStats;
     }
 }
