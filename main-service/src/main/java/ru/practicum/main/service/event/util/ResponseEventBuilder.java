@@ -81,11 +81,12 @@ public class ResponseEventBuilder {
     }
 
     private long getOneEventViews(LocalDateTime created, long eventId) {
-        StatParam statParam = new StatParam();
-        statParam.setStart(created.minusMinutes(1));
-        statParam.setEnd(LocalDateTime.now().plusMinutes(1));
-        statParam.setUnique(true);
-        statParam.setUris(List.of("/events/" + eventId));
+        StatParam statParam = StatParam.builder()
+                .start(created.minusMinutes(1))
+                .end(LocalDateTime.now().plusMinutes(1))
+                .unique(true)
+                .uris(List.of("/events/" + eventId))
+                .build();
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
         log.debug("Получен? = {} . Одиночный от статистики по запросу uris = {}, start = {}, end = {}",
@@ -101,15 +102,16 @@ public class ResponseEventBuilder {
     }
 
     private List<ViewStatsDto> getManyEventsViews(Collection<Long> eventIds) {
-        StatParam statParam = new StatParam();
-        statParam.setStart(MIN_START_DATE);
-        statParam.setEnd(LocalDateTime.now().plusMinutes(1));
-        statParam.setUnique(true);
         List<String> uris = eventIds.stream()
                 .map(id -> "/events/" + id)
                 .toList();
 
-        statParam.setUris(uris);
+        StatParam statParam = StatParam.builder()
+                .start(MIN_START_DATE)
+                .end(LocalDateTime.now().plusMinutes(1))
+                .unique(true)
+                .uris(uris)
+                .build();
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
         log.debug("Получен ответ size = {}, массовый от статистики по запросу uris = {}, start = {}, end = {}",
