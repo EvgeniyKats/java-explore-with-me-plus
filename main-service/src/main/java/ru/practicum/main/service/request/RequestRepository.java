@@ -2,7 +2,6 @@ package ru.practicum.main.service.request;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.main.service.request.enums.RequestStatus;
 import ru.practicum.main.service.request.model.ConfirmedRequests;
@@ -11,13 +10,11 @@ import ru.practicum.main.service.request.model.Request;
 import java.util.Collection;
 import java.util.List;
 
-public interface RequestRepository extends JpaRepository<Request, Long>, QuerydslPredicateExecutor<Request> {
+public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findAllByRequesterId(Long requesterId);
 
     boolean existsByEventIdAndRequesterId(Long eventId, Long requesterId);
-
-    Long countByEventId(Long eventId);
 
     List<Request> findAllByEventId(Long eventId);
 
