@@ -89,7 +89,7 @@ public class ResponseEventBuilder {
                 .build();
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
-        log.debug("Получен? = {} . Одиночный от статистики по запросу uris = {}, start = {}, end = {}",
+        log.debug("Статистика пустая = {} . Одиночный от статистики по запросу uris = {}, start = {}, end = {}",
                 viewStats.isEmpty(),
                 statParam.getUris(),
                 statParam.getStart(),
