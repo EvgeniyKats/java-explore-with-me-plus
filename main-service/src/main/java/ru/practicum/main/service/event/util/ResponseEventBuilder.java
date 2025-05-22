@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.practicum.main.service.Constants.MIN_START_DATE;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -52,9 +54,6 @@ public class ResponseEventBuilder {
     public <T extends ResponseEvent> List<T> buildManyEventResponseDto(List<Event> events, Class<T> type) {
         Map<Long, T> dtoById = new HashMap<>();
 
-        if (type == null) throw new RuntimeException();
-
-
         for (Event event : events) {
             if (type == EventFullDto.class) {
                 EventFullDto dtoTemp = eventMapper.toEventFullDto(event);
@@ -82,17 +81,19 @@ public class ResponseEventBuilder {
     }
 
     private long getOneEventViews(LocalDateTime created, long eventId) {
-        StatParam statParam = new StatParam();
-        statParam.setStart(created.minusMinutes(1));
-        statParam.setEnd(LocalDateTime.now().plusMinutes(1));
-        statParam.setUris(List.of("/events/" + eventId));
-        statParam.setUnique(true);
+        StatParam statParam = StatParam.builder()
+                .start(created.minusMinutes(1))
+                .end(LocalDateTime.now().plusMinutes(1))
+                .unique(true)
+                .uris(List.of("/events/" + eventId))
+                .build();
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
-        log.debug("Получен {} одиночный от статистики по запросу uris = {}, start = {}",
-                created,
+        log.debug("Статистика пустая = {} . Одиночный от статистики по запросу uris = {}, start = {}, end = {}",
+                viewStats.isEmpty(),
                 statParam.getUris(),
-                statParam.getStart());
+                statParam.getStart(),
+                statParam.getEnd());
         return viewStats.isEmpty() ? 0 : viewStats.getFirst().getHits();
     }
 
@@ -101,20 +102,23 @@ public class ResponseEventBuilder {
     }
 
     private List<ViewStatsDto> getManyEventsViews(Collection<Long> eventIds) {
-        StatParam statParam = new StatParam();
-        statParam.setStart(LocalDateTime.of(1970, 1, 1, 1, 1));
-        statParam.setEnd(LocalDateTime.now());
         List<String> uris = eventIds.stream()
                 .map(id -> "/events/" + id)
                 .toList();
 
-        statParam.setUris(uris);
+        StatParam statParam = StatParam.builder()
+                .start(MIN_START_DATE)
+                .end(LocalDateTime.now().plusMinutes(1))
+                .unique(true)
+                .uris(uris)
+                .build();
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
-        log.debug("Получен {} массовый от статистики по запросу uris = {}, start = {}",
-                LocalDateTime.MIN,
+        log.debug("Получен ответ size = {}, массовый от статистики по запросу uris = {}, start = {}, end = {}",
+                viewStats.size(),
                 statParam.getUris(),
-                statParam.getStart());
+                statParam.getStart(),
+                statParam.getEnd());
         return viewStats;
     }
 }

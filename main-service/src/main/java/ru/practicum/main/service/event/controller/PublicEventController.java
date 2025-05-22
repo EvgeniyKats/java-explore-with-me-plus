@@ -45,10 +45,10 @@ public class PublicEventController {
                                                                   @RequestParam(name = "paid", required = false) Boolean paid,
                                                                   @RequestParam(name = "rangeStart", required = false) @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime rangeStart,
                                                                   @RequestParam(name = "rangeEnd", required = false) @DateTimeFormat(pattern = DATE_PATTERN) LocalDateTime rangeEnd,
-                                                                  @RequestParam(name = "onlyAvailable", required = false, defaultValue = "false") Boolean onlyAvailable,
+                                                                  @RequestParam(name = "onlyAvailable", defaultValue = "false") Boolean onlyAvailable,
                                                                   @RequestParam(name = "sort", required = false) EventSortType sort,
-                                                                  @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
-                                                                  @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size,
+                                                                  @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+                                                                  @RequestParam(name = "size", defaultValue = "10") @Min(1) Integer size,
                                                                   HttpServletRequest request) {
         if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
             throw new BadRequestException("rangeStart > rangeEnd");
