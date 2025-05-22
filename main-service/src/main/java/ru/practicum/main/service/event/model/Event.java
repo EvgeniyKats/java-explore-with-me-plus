@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -82,10 +81,4 @@ public class Event {
 
     @OneToOne(mappedBy = "event", fetch = FetchType.LAZY)
     Location location;
-
-    @Transient
-    Long views;
-
-    @Transient
-    Long confirmedRequests;
 }
