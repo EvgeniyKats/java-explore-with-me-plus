@@ -27,8 +27,8 @@ public class PrivateEventController {
 
     @GetMapping
     public ResponseEntity<List<EventShortDto>> getAllUserEvents(@PathVariable(name = "userId") Long userId,
-                                                               @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
-                                                               @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
+                                                                @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+                                                                @RequestParam(name = "size", defaultValue = "10") @Min(1) Integer size) {
         log.info("Пришел GET запрос на /users/{}/events", userId);
         List<EventShortDto> events = eventService.getAllUsersEvents(userId, PageRequest.of(from, size));
         log.info("Отправлен ответ GET /users/{}/events с телом: {}", userId, events);
