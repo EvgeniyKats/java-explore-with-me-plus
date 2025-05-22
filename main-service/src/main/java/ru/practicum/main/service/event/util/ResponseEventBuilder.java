@@ -88,10 +88,11 @@ public class ResponseEventBuilder {
         statParam.setUris(List.of("/events/" + eventId));
 
         List<ViewStatsDto> viewStats = statsClient.getStat(statParam);
-        log.debug("Получен {} одиночный от статистики по запросу uris = {}, start = {}",
-                created,
+        log.debug("Получен? = {} . Одиночный от статистики по запросу uris = {}, start = {}, end = {}",
+                viewStats.isEmpty(),
                 statParam.getUris(),
-                statParam.getStart());
+                statParam.getStart(),
+                statParam.getEnd());
         return viewStats.isEmpty() ? 0 : viewStats.getFirst().getHits();
     }
 
