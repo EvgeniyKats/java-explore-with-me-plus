@@ -176,8 +176,8 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND));
 
         EventState state = event.getState();
-        if (state != PENDING && state != REJECTED) {
-            throw new ConflictException("Изменить можно только отмененные события или события в состоянии ожидания модерации");
+        if (state == PUBLISHED) {
+            throw new ConflictException("Изменить можно только не опубликованные события, текущий статус " + state);
         }
 
         if (updateDto.hasStateAction()) {
@@ -288,7 +288,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException(Constants.EVENT_NOT_FOUND));
 
         if (event.getState() != EventState.PENDING) {
-            throw new ConflictException("Изменить можно только PENDING события (ожидающие модерацию)");
+            throw new ConflictException("Изменить можно только события ожидающие модерацию, текущий статус " + event.getState());
         }
 
         if (updateDto.hasStateAction()) {
