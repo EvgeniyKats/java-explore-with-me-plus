@@ -1,16 +1,20 @@
-# Дополнительная функциональность -  комментарии
+# Дополнительная функциональность - комментарии
 
 ## Описание
+
 Функциональность представляет из себя новую сущность **комментарий** и **API endpoints** для взаимодействия с ней.
 
-| Операция    | Гости | Пользователи | Администрация |
-|-------------|:-----:|:------------:|:-------------:|
-| Создание    |   -   |      +       |       -       |
-| Обновление  |   -   |      +       |       -       |
-| Удаление    |   -   |      +       |       +       |
-| Получение   |   +   |      -       |       -       |
+Ниже представлена таблица, показывающая **наличие эндпоинов** по уровням доступа:
+
+| Операция   | Public | User | Admin |
+|------------|:------:|:----:|:-----:|
+| Создание   |   -    |  +   |   -   |
+| Обновление |   -    |  +   |   -   |
+| Удаление   |   -    |  +   |   +   |
+| Получение  |   +    |  -   |   -   |
 
 ## API endpoints
+
 **Server**: http://localhost:8080
 
 *Формат обмена данными с сервером:* `JSON`
@@ -20,15 +24,19 @@
 ------------
 
 ### POST
+
 #### Создание комментария, доступно только пользователям:
+
 POST `/users/{userId}/events{eventId}/comment`
 
 **Параметры**:
+
 - `userId*` ($int64) - id пользователя
 - `eventId*` ($int64) - id события
 - Request body: `NewCommentDto*`
 
 **Ответы сервера**:
+
 - Code `201` - комментарий создан
 
 <details>
@@ -89,19 +97,24 @@ POST `/users/{userId}/events{eventId}/comment`
 ------------
 
 ### PATCH
+
 #### Обновление комментария, доступно только пользователям:
+
 Особенности:
+
 - Комментарий может быть обновлен в течение 24 часов после создания
 
 PATCH `/users/{userId}/events{eventId}/comments/{commentsId}`
 
 **Параметры**:
+
 - `userId*` ($int64) - id пользователя
 - `eventId*` ($int64) - id события
 - `commentsId` ($int64) - id комментария
 - Request body: `UpdateCommentDto*`
 
 **Ответы сервера**:
+
 - Code `200` - комментарий обновлен
 
 <details>
@@ -122,7 +135,6 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentsId}`
 
 </p>
 </details>
-
 
 - Code `400` - запрос составлен некорректно
 
@@ -163,15 +175,19 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentsId}`
 ------------
 
 ### DELETE
+
 #### Удаление комментария пользователем:
+
 DELETE `/users/{userId}/events{eventId}/comments/{commentsId}`
 
 **Параметры**:
+
 - `userId*` ($int64) - id пользователя
 - `eventId*` ($int64) - id события
 - `commentsId*` ($int64) - id комментария
 
 **Ответы сервера**:
+
 - Code `204` - комментарий удалён
 
 <details>
@@ -225,13 +241,16 @@ DELETE `/users/{userId}/events{eventId}/comments/{commentsId}`
 ------------
 
 #### Удаление комментария администратором:
+
 DELETE `/admin/events/{eventId}/comments/{commentsId}`
 
 **Параметры**:
+
 - `eventId*` ($int64) - id события
 - `commentsId*` ($int64) - id комментария
 
 **Ответы сервера**:
+
 - Code `204` - комментарий удалён
 
 <details>
@@ -285,14 +304,18 @@ DELETE `/admin/events/{eventId}/comments/{commentsId}`
 ------------
 
 ### GET
+
 #### Получение одиночного комментария события (публичный API)
+
 GET `events/{eventId}/comments/{commentsId}`
 
 **Параметры**:
+
 - `eventId*` ($int64) - id события
 - `commentsId*` ($int64) - id комментария
 
 **Ответы сервера**:
+
 - Code `200` - комментарий получен
 
 <details>
@@ -351,9 +374,11 @@ GET `events/{eventId}/comments/{commentsId}`
 </details>
 
 #### Получение всех комментариев события (публичный API)
+
 GET `events/{eventId}/comments`
 
 **Параметры**:
+
 - `eventId*` ($int64) - id события
 - `from` ($int32, default = 0) - количество элементов, которые нужно пропустить для формирования текущего набора
 - `size` ($int32, default = 10) - количество элементов в наборе
@@ -361,8 +386,8 @@ GET `events/{eventId}/comments`
     - Допустимые значения: `COMMENTS_NEW`, `COMMENTS_OLD`
 
 **Ответы сервера**:
-- Code `200` - комментарии получены
 
+- Code `200` - комментарии получены
 
 <details>
   <summary>Пример ответа</summary>
@@ -393,7 +418,6 @@ GET `events/{eventId}/comments`
 
 </p>
 </details>
-
 
 - Code `400` - запрос составлен некорректно
 
@@ -434,15 +458,20 @@ GET `events/{eventId}/comments`
 ------------
 
 ## Schemas
+
 ### CommentDto
+
 **Описание**: используется для создания и обновления комментария
+
 - `text*` (string) - текст комментария
     - minLength: 1
     - maxLength: 5000
     - example: Хочу участвовать!
 
 ### GetCommentDto
+
 **Описание**: используется для получения информации о комментарии
+
 - `id` ($int64) - id комментария
 - `text` (string) - текст комментария
 - `created` (string) - дата и время создания комментария (в формате "yyyy-MM-dd HH:mm:ss")
@@ -451,5 +480,7 @@ GET `events/{eventId}/comments`
     - name (string) - имя пользователя
 
 ### EventFullDto и EventShortDto
+
 **Описание**: дополнительно включают 10 последних комментариев
+
 - `comments` (CommentDto) - последние комментарии
