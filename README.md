@@ -172,6 +172,24 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentsId}`
 </p>
 </details>
 
+- Code `409` - при обновлении коментария спустя 24 часа после создания
+
+<details>
+  <summary>Пример ответа</summary>
+<p>
+
+```JSON
+{
+  "status": "FORBIDDEN",
+  "reason": "For the requested operation the conditions are not met.",
+  "message": "It is allowed to change the comment within 24 hours after create",
+  "timestamp": "2022-09-07 09:10:50"
+}
+```
+
+</p>
+</details>
+
 ------------
 
 ### DELETE
@@ -475,6 +493,7 @@ GET `events/{eventId}/comments`
 - `id` ($int64) - id комментария
 - `text` (string) - текст комментария
 - `created` (string) - дата и время создания комментария (в формате "yyyy-MM-dd HH:mm:ss")
+- `eventId` ($int64) - id комментируемого события
 - `UserShortDto` - краткая информация об авторе комментария:
     - id ($int64) - id пользователя
     - name (string) - имя пользователя
