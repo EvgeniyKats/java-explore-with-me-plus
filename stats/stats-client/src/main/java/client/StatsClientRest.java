@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import ru.practicum.stats.dto.EndpointHitDto;
-import ru.practicum.stats.dto.StatParamDto;
 import ru.practicum.stats.dto.ViewStatsDto;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -27,8 +27,8 @@ import static util.StatsServerPaths.PATH_STAT;
 public class StatsClientRest implements StatsClient {
     private final RestClient restClient;
 
-    public StatsClientRest(@Value("${stats-server:" + PATH_BASE + "}") String statsServerUrl) {
-        System.out.println("statsServerUrl = " + statsServerUrl);
+    public StatsClientRest(@Value("${stats.url:" + PATH_BASE + "}") String statsServerUrl) {
+        log.info("stats.url = {}", statsServerUrl);
         restClient = RestClient.builder()
                 .baseUrl(statsServerUrl)
                 .build();
@@ -65,26 +65,26 @@ public class StatsClientRest implements StatsClient {
     }
 
     @Override
-    public List<ViewStatsDto> getStat(StatParamDto statParamDto) throws RequestException {
+    public List<ViewStatsDto> getStat(StatParam statParam) throws RequestException {
         log.info("Получение статистики с параметрами: start = {}, end = {}, uris = {}, unique = {}",
-                statParamDto.getStart(),
-                statParamDto.getEnd(),
-                statParamDto.getUris(),
-                statParamDto.getUnique());
+                statParam.getStart(),
+                statParam.getEnd(),
+                statParam.getUris(),
+                statParam.getUnique());
 
         log.trace("Отправка запроса на получение статистики");
         List<ViewStatsDto> response = restClient.get()
                 .uri(uriBuilder -> {
                     uriBuilder.path(PATH_STAT)
-                            .queryParam("start", statParamDto.getStart())
-                            .queryParam("end", statParamDto.getEnd());
+                            .queryParam("start", statParam.getStart())
+                            .queryParam("end", statParam.getEnd());
 
-                    if (statParamDto.getUris() != null) {
-                        uriBuilder.queryParam("uris", statParamDto.getUris());
+                    if (statParam.getUris() != null) {
+                        uriBuilder.queryParam("uris", statParam.getUris());
                     }
 
-                    if (statParamDto.getUnique() != null) {
-                        uriBuilder.queryParam("unique", statParamDto.getUnique());
+                    if (statParam.getUnique() != null) {
+                        uriBuilder.queryParam("unique", statParam.getUnique());
                     }
 
                     return uriBuilder.build();
@@ -116,7 +116,10 @@ public class StatsClientRest implements StatsClient {
         try (inputStream) {
             return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            return "";
+            String msg = "Не удалось конвертировать тело по причине: " + e.getMessage()
+                         + " trace: " + Arrays.toString(e.getStackTrace());
+            log.warn(msg);
+            return msg;
         }
     }
 }

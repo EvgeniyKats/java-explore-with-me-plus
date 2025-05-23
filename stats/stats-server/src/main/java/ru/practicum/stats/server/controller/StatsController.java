@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.stats.dto.EndpointHitDto;
 import ru.practicum.stats.dto.ViewStatsDto;
+import ru.practicum.stats.server.error.BadRequestException;
 import ru.practicum.stats.server.service.StatsService;
 
 import java.time.LocalDateTime;
@@ -30,11 +31,14 @@ public class StatsController {
     public ResponseEntity<List<ViewStatsDto>> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
                                                        @RequestParam(name = "end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                                                        @RequestParam(name = "uris", required = false) List<String> uris,
-                                                       @RequestParam(name = "unique", required = false,
-                                                               defaultValue = "false") Boolean unique) {
+                                                       @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
+        if (end.isBefore(start)) {
+            throw new BadRequestException("end < start");
+        }
+
         log.info("Пришел запрос на сервер статистики GET /stats");
         List<ViewStatsDto> stats = statService.getStats(start, end, uris, unique);
-        log.info("Статистика собрана. GET /stats отработал без ошибок");
+        log.info("Статистика собрана. GET /stats отработал без ошибок, size = {}", stats.size());
         return new ResponseEntity<>(stats, HttpStatus.OK);
     }
 

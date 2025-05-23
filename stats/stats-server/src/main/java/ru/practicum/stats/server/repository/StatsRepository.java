@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(s.ip) AS INTEGER)) " +
+    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, COUNT(s.ip)) " +
             "FROM EndpointHit s " +
             "WHERE s.created BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
@@ -21,7 +21,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
                                    @Param("end") LocalDateTime end,
                                    @Param("uris") List<String> uris);
 
-    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, CAST(COUNT(DISTINCT s.ip) AS INTEGER)) " +
+    @Query("SELECT new ru.practicum.stats.dto.ViewStatsDto(s.app, s.uri, COUNT(DISTINCT s.ip)) " +
             "FROM EndpointHit s " +
             "WHERE s.created BETWEEN :start AND :end " +
             "AND (:uris IS NULL OR s.uri IN :uris) " +
