@@ -48,6 +48,7 @@ POST `/users/{userId}/events{eventId}/comment`
   "id": 1,
   "text": "Хочу участвовать!",
   "created": "2024-12-31 15:10:05",
+  "eventId": 1,
   "author": {
     "id": 1,
     "name": "Фёдор"
@@ -126,6 +127,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
   "id": 1,
   "text": "Хочу участвовать!",
   "created": "2024-12-31 15:10:05",
+  "eventId": 1,
   "author": {
     "id": 1,
     "name": "Фёдор"
@@ -345,6 +347,7 @@ GET `events/{eventId}/comments/{commentId}`
   "id": 1,
   "text": "Хочу участвовать!",
   "created": "2024-12-31 15:10:05",
+  "eventId": 1,
   "author": {
     "id": 1,
     "name": "Фёдор"
@@ -417,6 +420,7 @@ GET `events/{eventId}/comments`
     "id": 1,
     "text": "Хочу участвовать!",
     "created": "2024-12-31 15:10:05",
+    "eventId": 1,
     "author": {
       "id": 1,
       "name": "Фёдор"
@@ -426,6 +430,7 @@ GET `events/{eventId}/comments`
     "id": 2,
     "text": "Интересно",
     "created": "2024-12-31 16:15:20",
+    "eventId": 1,
     "author": {
       "id": 2,
       "name": "Андрей"
