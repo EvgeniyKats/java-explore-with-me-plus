@@ -104,13 +104,13 @@ POST `/users/{userId}/events{eventId}/comment`
 
 - Комментарий может быть обновлен в течение 24 часов после создания
 
-PATCH `/users/{userId}/events{eventId}/comments/{commentsId}`
+PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 
 **Параметры**:
 
 - `userId*` ($int64) - id пользователя
 - `eventId*` ($int64) - id события
-- `commentsId` ($int64) - id комментария
+- `commentId` ($int64) - id комментария
 - Request body: `UpdateCommentDto*`
 
 **Ответы сервера**:
@@ -196,13 +196,13 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentsId}`
 
 #### Удаление комментария пользователем:
 
-DELETE `/users/{userId}/events{eventId}/comments/{commentsId}`
+DELETE `/users/{userId}/events{eventId}/comments/{commentId}`
 
 **Параметры**:
 
 - `userId*` ($int64) - id пользователя
 - `eventId*` ($int64) - id события
-- `commentsId*` ($int64) - id комментария
+- `commentId*` ($int64) - id комментария
 
 **Ответы сервера**:
 
@@ -260,12 +260,12 @@ DELETE `/users/{userId}/events{eventId}/comments/{commentsId}`
 
 #### Удаление комментария администратором:
 
-DELETE `/admin/events/{eventId}/comments/{commentsId}`
+DELETE `/admin/events/{eventId}/comments/{commentId}`
 
 **Параметры**:
 
 - `eventId*` ($int64) - id события
-- `commentsId*` ($int64) - id комментария
+- `commentId*` ($int64) - id комментария
 
 **Ответы сервера**:
 
@@ -325,12 +325,12 @@ DELETE `/admin/events/{eventId}/comments/{commentsId}`
 
 #### Получение одиночного комментария события (публичный API)
 
-GET `events/{eventId}/comments/{commentsId}`
+GET `events/{eventId}/comments/{commentId}`
 
 **Параметры**:
 
 - `eventId*` ($int64) - id события
-- `commentsId*` ($int64) - id комментария
+- `commentId*` ($int64) - id комментария
 
 **Ответы сервера**:
 
