@@ -68,6 +68,17 @@ CREATE TABLE IF NOT EXISTS events_compilations
     PRIMARY KEY (event_id, compilation_id)
 );
 
+CREATE TABLE IF NOT EXISTS comments
+(
+    comment_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    author_id  BIGINT NOT NULL,
+    event_id   BIGINT NOT NULL,
+    text       VARCHAR(5000) NOT NULL,
+    created_on TIMESTAMP WITHOUT TIME ZONE,
+    CONSTRAINT text_len CHECK (LENGTH(text) >= 1 AND LENGTH(text) <= 5000),
+    CONSTRAINT created_on_not_null CHECK (created_on <> NULL)
+);
+
 ALTER TABLE events
     DROP CONSTRAINT IF EXISTS fk_events_initiator_id;
 ALTER TABLE events
@@ -109,3 +120,15 @@ ALTER TABLE events_compilations
 ALTER TABLE events_compilations
     ADD CONSTRAINT fk_events_compilations_compilation_id FOREIGN KEY (compilation_id)
         REFERENCES compilations (compilation_id) ON DELETE CASCADE;
+
+ALTER TABLE comments
+    DROP CONSTRAINT IF EXISTS fk_comments_author_id;
+ALTER TABLE comments
+    ADD CONSTRAINT fk_comments_author_id FOREIGN KEY (author_id)
+        REFERENCES  users (user_id) ON DELETE CASCADE;
+
+ALTER TABLE comments
+    DROP CONSTRAINT IF EXISTS fk_comments_event_id;
+ALTER TABLE comments
+    ADD CONSTRAINT fk_comments_event_id FOREIGN KEY (event_id)
+        REFERENCES  events (event_id) ON DELETE CASCADE;
