@@ -51,7 +51,7 @@ public class Comment {
     @Column(nullable = false, length = 5000)
     String text;
 
-    @Column(nullable = false)
+    @Column(name = "created_date", nullable = false)
     LocalDateTime created;
 
 }
