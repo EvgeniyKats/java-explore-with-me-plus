@@ -74,9 +74,9 @@ CREATE TABLE IF NOT EXISTS comments
     author_id  BIGINT NOT NULL,
     event_id   BIGINT NOT NULL,
     text       VARCHAR(5000) NOT NULL,
-    created_on TIMESTAMP WITHOUT TIME ZONE,
+    created    TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT text_len CHECK (LENGTH(text) >= 1 AND LENGTH(text) <= 5000),
-    CONSTRAINT created_on_not_null CHECK (created_on <> NULL)
+    CONSTRAINT created_not_null CHECK (created <> NULL)
 );
 
 ALTER TABLE events

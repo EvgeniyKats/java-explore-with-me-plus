@@ -51,7 +51,7 @@ public class Comment {
     @Column(nullable = false, length = 5000)
     String text;
 
-    @Column(name = "created_on", nullable = false)
-    LocalDateTime createdOn;
+    @Column(nullable = false)
+    LocalDateTime created;
 
 }

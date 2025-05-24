@@ -27,11 +27,11 @@ public class GetCommentDto {
     UserShortDto author;
 
     @NotNull
-    Long event_id;
+    Long eventId;
 
     @NotBlank
     String text;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_PATTERN)
-    LocalDateTime createdOn;
+    LocalDateTime created;
 }
