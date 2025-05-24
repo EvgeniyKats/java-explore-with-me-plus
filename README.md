@@ -33,7 +33,7 @@ POST `/users/{userId}/events{eventId}/comment`
 
 - `userId*` ($int64) - id пользователя
 - `eventId*` ($int64) - id события
-- Request body: `NewCommentDto*`
+- Request body: `CommentDto*`
 
 **Ответы сервера**:
 
@@ -112,7 +112,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 - `userId*` ($int64) - id пользователя
 - `eventId*` ($int64) - id события
 - `commentId` ($int64) - id комментария
-- Request body: `UpdateCommentDto*`
+- Request body: `CommentDto*`
 
 **Ответы сервера**:
 
@@ -507,4 +507,4 @@ GET `events/{eventId}/comments`
 
 **Описание**: дополнительно включают 10 последних комментариев
 
-- `comments` (CommentDto) - последние комментарии
+- `comments` (GetCommentDto) - последние комментарии
