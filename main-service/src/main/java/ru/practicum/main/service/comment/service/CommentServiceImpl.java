@@ -104,8 +104,8 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException(Constants.EVENT_NOT_FOUND);
         }
         Sort sort = switch (sortType) {
-            case COMMENTS_OLD -> Sort.by("created").descending();
-            case COMMENTS_NEW -> Sort.by("created").ascending();
+            case COMMENTS_OLD -> Sort.by("created").ascending();
+            case COMMENTS_NEW -> Sort.by("created").descending();
         };
         Pageable pageable = PageRequest.of(from, size, sort);
         List<Comment> comments = commentRepository.findByEventId(eventId, pageable);
