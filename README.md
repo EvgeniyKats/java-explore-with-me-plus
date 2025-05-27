@@ -174,6 +174,23 @@ PATCH `/users/{userId}/events/{eventId}/comments/{commentId}`
 </p>
 </details>
 
+- Code `409` - при обновлении коментария спустя 24 часа после создания
+
+<details>
+  <summary>Пример ответа</summary>
+<p>
+
+```JSON
+{
+  "status": "FORBIDDEN",
+  "reason": "For the requested operation the conditions are not met.",
+  "message": "It is allowed to change the comment within 24 hours after create",
+  "timestamp": "2022-09-07 09:10:50"
+}
+```
+</p>
+</details>
+
 ------------
 
 ### DELETE
