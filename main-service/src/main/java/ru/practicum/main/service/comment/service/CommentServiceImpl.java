@@ -16,6 +16,7 @@ import ru.practicum.main.service.comment.model.Comment;
 import ru.practicum.main.service.event.EventRepository;
 import ru.practicum.main.service.event.model.Event;
 import ru.practicum.main.service.exception.ConflictException;
+import ru.practicum.main.service.exception.ForbiddenException;
 import ru.practicum.main.service.exception.NotFoundException;
 import ru.practicum.main.service.user.UserRepository;
 import ru.practicum.main.service.user.model.User;
@@ -24,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
@@ -34,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
     private final EventRepository eventRepository;
 
     @Override
+    @Transactional
     public GetCommentDto addNewComment(Long userId, Long eventId, CommentDto commentDto) {
         User commentAuthor = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND));
@@ -47,6 +49,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public GetCommentDto updateComment(Long userId, Long eventId, Long commentId, CommentDto commentDto) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(Constants.USER_NOT_FOUND);
@@ -56,6 +59,12 @@ public class CommentServiceImpl implements CommentService {
         }
         Comment commentFromDb = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(Constants.COMMENT_NOT_FOUND));
+        if (!commentFromDb.getAuthor().getId().equals(userId)) {
+            throw new ForbiddenException(Constants.USER_NOT_THE_AUTHOR);
+        }
+        if (!commentFromDb.getEvent().getId().equals(eventId)) {
+            throw new ConflictException(Constants.COMMENT_EVENT_NOT_MATCH);
+        }
         if (commentFromDb.getCreated().isBefore(LocalDateTime.now().minusDays(1))) {
             throw new ConflictException("Комментарий может быть изменен только в первые 24 часа после создания");
         }
@@ -64,6 +73,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void deleteCommentPrivate(Long userId, Long eventId, Long commentId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(Constants.USER_NOT_FOUND);
@@ -71,19 +81,27 @@ public class CommentServiceImpl implements CommentService {
         if (!eventRepository.existsById(eventId)) {
             throw new NotFoundException(Constants.EVENT_NOT_FOUND);
         }
-        if (!commentRepository.existsById(eventId)) {
-            throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
+        Comment commentFromDb = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(Constants.COMMENT_NOT_FOUND));
+        if (!commentFromDb.getAuthor().getId().equals(userId)) {
+            throw new ForbiddenException(Constants.USER_NOT_THE_AUTHOR);
+        }
+        if (!commentFromDb.getEvent().getId().equals(eventId)) {
+            throw new ConflictException(Constants.COMMENT_EVENT_NOT_MATCH);
         }
         commentRepository.deleteById(commentId);
     }
 
     @Override
+    @Transactional
     public void deleteCommentAdmin(Long eventId, Long commentId) {
         if (!eventRepository.existsById(eventId)) {
             throw new NotFoundException(Constants.EVENT_NOT_FOUND);
         }
-        if (!commentRepository.existsById(eventId)) {
-            throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
+        Comment commentFromDb = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(Constants.COMMENT_NOT_FOUND));
+        if (!commentFromDb.getEvent().getId().equals(eventId)) {
+            throw new ConflictException(Constants.COMMENT_EVENT_NOT_MATCH);
         }
         commentRepository.deleteById(commentId);
     }
