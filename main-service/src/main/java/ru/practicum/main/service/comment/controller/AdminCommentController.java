@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.main.service.comment.service.CommentService;
 
 @Slf4j
 @RestController
@@ -17,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Validated
 public class AdminCommentController {
-//    private final CommentService commentService;
+    private final CommentService commentService;
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@Positive @PathVariable Long eventId,
                               @Positive @PathVariable Long commentId) {
         log.info("DELETE /admin/events/{}/comments/{}", eventId, commentId);
-//        commentService.deleteComment();
+        commentService.deleteCommentAdmin(eventId, commentId);
         log.info("Был успешно удалён комментарий event id = {}, comment id = {}", eventId, commentId);
     }
 }
