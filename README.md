@@ -27,7 +27,7 @@
 
 #### Создание комментария, доступно только пользователям:
 
-POST `/users/{userId}/events{eventId}/comment`
+POST `/users/{userId}/events/{eventId}/comment`
 
 **Параметры**:
 
@@ -105,7 +105,7 @@ POST `/users/{userId}/events{eventId}/comment`
 
 - Комментарий может быть обновлен в течение 24 часов после создания
 
-PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
+PATCH `/users/{userId}/events/{eventId}/comments/{commentId}`
 
 **Параметры**:
 
@@ -156,7 +156,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найден пользователь, событие или комментарий
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -166,25 +166,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
-  "timestamp": "2022-09-07 09:10:50"
-}
-```
-
-</p>
-</details>
-
-- Code `409` - при обновлении коментария спустя 24 часа после создания
-
-<details>
-  <summary>Пример ответа</summary>
-<p>
-
-```JSON
-{
-  "status": "FORBIDDEN",
-  "reason": "For the requested operation the conditions are not met.",
-  "message": "It is allowed to change the comment within 24 hours after create",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -198,7 +180,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 
 #### Удаление комментария пользователем:
 
-DELETE `/users/{userId}/events{eventId}/comments/{commentId}`
+DELETE `/users/{userId}/events/{eventId}/comments/{commentId}`
 
 **Параметры**:
 
@@ -240,7 +222,7 @@ DELETE `/users/{userId}/events{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найден пользователь, событие или комментарий
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -250,7 +232,7 @@ DELETE `/users/{userId}/events{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -303,7 +285,7 @@ DELETE `/admin/events/{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найдено событие или комментарий
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -313,7 +295,7 @@ DELETE `/admin/events/{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -376,7 +358,7 @@ GET `events/{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найдено событие
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -386,7 +368,7 @@ GET `events/{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -394,7 +376,7 @@ GET `events/{eventId}/comments/{commentId}`
 </p>
 </details>
 
-#### Получение всех комментариев события (публичный API)
+#### Получение нескольких комментариев события (публичный API)
 
 GET `events/{eventId}/comments`
 
@@ -404,7 +386,7 @@ GET `events/{eventId}/comments`
 - `from` ($int32, default = 0) - количество элементов, которые нужно пропустить для формирования текущего набора
 - `size` ($int32, default = 10) - количество элементов в наборе
 - `sort` (string, default = COMMENTS_NEW) - сортировка по старым или новым комментариям
-    - Допустимые значения: `COMMENTS_NEW`, `COMMENTS_OLD`
+  - Допустимые значения: `COMMENTS_NEW`, `COMMENTS_OLD`
 
 **Ответы сервера**:
 
@@ -487,9 +469,9 @@ GET `events/{eventId}/comments`
 **Описание**: используется для создания и обновления комментария
 
 - `text*` (string) - текст комментария
-    - minLength: 1
-    - maxLength: 5000
-    - example: Хочу участвовать!
+  - minLength: 1
+  - maxLength: 5000
+  - example: Хочу участвовать!
 
 ### GetCommentDto
 
@@ -500,8 +482,8 @@ GET `events/{eventId}/comments`
 - `created` (string) - дата и время создания комментария (в формате "yyyy-MM-dd HH:mm:ss")
 - `eventId` ($int64) - id комментируемого события
 - `UserShortDto` - краткая информация об авторе комментария:
-    - id ($int64) - id пользователя
-    - name (string) - имя пользователя
+  - id ($int64) - id пользователя
+  - name (string) - имя пользователя
 
 ### EventFullDto и EventShortDto
 
