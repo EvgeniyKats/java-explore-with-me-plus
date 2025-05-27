@@ -31,4 +31,10 @@ public class GlobalExceptionHandler {
     public ApiError handleConflict(final ConflictException e) {
         return e.getError();
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiError handleForbidden(final ForbiddenException e) {
+        return e.getError();
+    }
 }
