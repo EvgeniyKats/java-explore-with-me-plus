@@ -188,6 +188,7 @@ PATCH `/users/{userId}/events/{eventId}/comments/{commentId}`
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
+
 </p>
 </details>
 
@@ -403,7 +404,7 @@ GET `events/{eventId}/comments`
 - `from` ($int32, default = 0) - количество элементов, которые нужно пропустить для формирования текущего набора
 - `size` ($int32, default = 10) - количество элементов в наборе
 - `sort` (string, default = COMMENTS_NEW) - сортировка по старым или новым комментариям
-  - Допустимые значения: `COMMENTS_NEW`, `COMMENTS_OLD`
+    - Допустимые значения: `COMMENTS_NEW`, `COMMENTS_OLD`
 
 **Ответы сервера**:
 
@@ -486,9 +487,9 @@ GET `events/{eventId}/comments`
 **Описание**: используется для создания и обновления комментария
 
 - `text*` (string) - текст комментария
-  - minLength: 1
-  - maxLength: 5000
-  - example: Хочу участвовать!
+    - minLength: 1
+    - maxLength: 5000
+    - example: Хочу участвовать!
 
 ### GetCommentDto
 
@@ -499,8 +500,8 @@ GET `events/{eventId}/comments`
 - `created` (string) - дата и время создания комментария (в формате "yyyy-MM-dd HH:mm:ss")
 - `eventId` ($int64) - id комментируемого события
 - `UserShortDto` - краткая информация об авторе комментария:
-  - id ($int64) - id пользователя
-  - name (string) - имя пользователя
+    - id ($int64) - id пользователя
+    - name (string) - имя пользователя
 
 ### EventFullDto и EventShortDto
 
