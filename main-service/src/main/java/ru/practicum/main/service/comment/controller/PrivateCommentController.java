@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.practicum.main.service.comment.dto.CommentDto;
 import ru.practicum.main.service.comment.dto.GetCommentDto;
+import ru.practicum.main.service.comment.service.CommentService;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,14 +25,14 @@ import ru.practicum.main.service.comment.dto.GetCommentDto;
 @Validated
 @Slf4j
 public class PrivateCommentController {
+    private final CommentService commentService;
 
     @PostMapping("/comment")
     public ResponseEntity<GetCommentDto> createComment(@PathVariable("userId") @Positive Long userId,
                                                        @PathVariable("eventId") @Positive Long eventId,
                                                        @RequestBody @Valid CommentDto commentDto) {
-        //todo: заменить на сервис
         log.info("Create comment for user {} event {} with body {}", userId, eventId, commentDto);
-        GetCommentDto comment = new GetCommentDto();
+        GetCommentDto comment = commentService.addNewComment(userId, eventId, commentDto);
         log.info("Успешное создание комментария {}", comment);
         return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
@@ -41,9 +42,8 @@ public class PrivateCommentController {
                                                       @PathVariable("eventId") @Positive Long eventId,
                                                       @PathVariable("commentId") @Positive Long commentId,
                                                       @RequestBody @Valid CommentDto commentDto) {
-        //todo: заменить на сервис
         log.info("Patch comment for user {} event {} with id {} and body {}", userId, eventId, commentId, commentDto);
-        GetCommentDto comment = new GetCommentDto();
+        GetCommentDto comment = commentService.updateComment(userId, eventId, commentId, commentDto);
         log.info("Комментарий изменен {}", comment);
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
@@ -54,7 +54,7 @@ public class PrivateCommentController {
                               @PathVariable("eventId") @Positive Long eventId,
                               @PathVariable("commentId") @Positive Long commentId) {
         log.info("Delete comment for user {} event {} with id {}", userId, eventId, commentId);
-        // todo: вызов сервиса
+        commentService.deleteCommentPrivate(userId, eventId, commentId);
         log.info("Комментарий с id {} успешно удален", commentId);
     }
 }
