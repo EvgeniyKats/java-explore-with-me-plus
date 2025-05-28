@@ -10,10 +10,8 @@ import ru.practicum.main.service.comment.model.Comment;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MapperComment {
 
-    @Mapping(target = "eventId", expression = "java(comment.getEvent().getId())")
-    GetCommentDto toCommentDto(Comment comment);
-
     Comment toComment(CommentDto commentDto);
 
+    @Mapping(target = "eventId", expression = "java(comment.getEvent().getId())")
     GetCommentDto toGetCommentDto(Comment comment);
 }

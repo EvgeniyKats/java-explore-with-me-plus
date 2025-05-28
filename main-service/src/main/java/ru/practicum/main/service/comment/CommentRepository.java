@@ -18,7 +18,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             WHERE c.event_id IN :ids AND c.comment_id IN (SELECT comment_id
                                    FROM comments
                                    WHERE event_id = c.event_id
-                                   ORDER BY created DESC
+                                   ORDER BY created_date DESC
                                    LIMIT 10);
             """, nativeQuery = true)
     List<Comment> findLastCommentsForManyEvents(@Param("ids") Set<Long> ids);
