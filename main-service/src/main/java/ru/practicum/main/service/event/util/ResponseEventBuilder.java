@@ -84,6 +84,11 @@ public class ResponseEventBuilder {
 
         getManyEventsComments(dtoById.keySet()).forEach(comment -> {
             T t = dtoById.get(comment.getEvent().getId());
+
+            if (t.getComments() == null) {
+                t.setComments(new ArrayList<>());
+            }
+
             t.getComments().add(commentMapper.toGetCommentDto(comment));
         });
 

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f14da529-8fc0-48ae-8e40-ae5dc01b7225",
+		"_postman_id": "88469567-5acd-4fe4-a6fd-b5ffe08c9471",
 		"name": "Explore with me - feature comments",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34516403"
@@ -1851,8 +1851,8 @@
 													"    try {\r",
 													"        const category = await api.addCategory(rnd.getCategory());\r",
 													"        const user = await api.addUser(rnd.getUser());\r",
-													"        await api.publishEvent(event.id);\r",
 													"        const event = await api.addEvent(user.id, rnd.getEvent(category.id));\r",
+													"        await api.publishEvent(event.id);\r",
 													"        const comment = await api.addComment(user.id, event.id, rnd.getComment());\r",
 													"        const finded = await api.findComment(event.id, comment.id);\r",
 													"\r",
