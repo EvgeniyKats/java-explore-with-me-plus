@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.main.service.comment.dto.GetCommentDto;
 import ru.practicum.main.service.comment.enums.CommentSortType;
+import ru.practicum.main.service.comment.service.CommentService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,15 +23,15 @@ import java.util.List;
 @Slf4j
 @Validated
 public class PublicCommentController {
+    private final CommentService commentService;
 
     @GetMapping("/{commentId}")
     public ResponseEntity<GetCommentDto> getComment(@PathVariable @Positive final Long eventId,
                                                     @PathVariable @Positive final Long commentId) {
         log.info("Получение комментария по id и eventId : {}, {}", commentId, eventId);
-        GetCommentDto comment = new GetCommentDto();
+        GetCommentDto comment = commentService.getCommentById(eventId, commentId);
         log.info("Отдан комментарий с телом {}", comment);
         return ResponseEntity.ok(comment);
-        //todo: заменить на сервис
     }
 
     @GetMapping
@@ -40,9 +40,8 @@ public class PublicCommentController {
                                                            @RequestParam(defaultValue = "10") @Min(1) Integer size,
                                                            @RequestParam(defaultValue = "COMMENTS_NEW") CommentSortType sort) {
         log.info("Получение комментариев на мероприятие {}", eventId);
-        List<GetCommentDto> comments = new ArrayList<>();
+        List<GetCommentDto> comments = commentService.getEventComments(eventId, from, size, sort);
         log.info("Сформирован ответ с телом: {}", comments);
         return ResponseEntity.ok(comments);
-        //todo: заменить на сервис
     }
 }
