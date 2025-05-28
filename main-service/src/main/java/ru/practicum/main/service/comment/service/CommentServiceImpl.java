@@ -53,16 +53,16 @@ public class CommentServiceImpl implements CommentService {
         Comment commentFromDb = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(Constants.COMMENT_NOT_FOUND));
         if (!commentFromDb.getEvent().getId().equals(eventId)) {
-            throw new ConflictException(Constants.COMMENT_EVENT_NOT_MATCH);
+            throw new NotFoundException(Constants.COMMENT_EVENT_NOT_MATCH);
         }
         if (!commentFromDb.getAuthor().getId().equals(userId)) {
-            throw new ConflictException(Constants.COMMENT_AUTHOR_NOT_MATCH);
+            throw new NotFoundException(Constants.COMMENT_AUTHOR_NOT_MATCH);
         }
         if (commentFromDb.getCreated().isBefore(LocalDateTime.now().minusDays(1))) {
             throw new ConflictException("Комментарий может быть изменен только в первые 24 часа после создания");
         }
         commentFromDb.setText(commentDto.getText());
-        return commentMapper.toGetCommentDto(commentRepository.save(commentFromDb));
+        return commentMapper.toGetCommentDto(commentFromDb);
     }
 
     @Override
@@ -71,10 +71,10 @@ public class CommentServiceImpl implements CommentService {
         Comment commentFromDb = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(Constants.COMMENT_NOT_FOUND));
         if (!commentFromDb.getEvent().getId().equals(eventId)) {
-            throw new ConflictException(Constants.COMMENT_EVENT_NOT_MATCH);
+            throw new NotFoundException(Constants.COMMENT_EVENT_NOT_MATCH);
         }
         if (!commentFromDb.getAuthor().getId().equals(userId)) {
-            throw new ConflictException(Constants.COMMENT_AUTHOR_NOT_MATCH);
+            throw new NotFoundException(Constants.COMMENT_AUTHOR_NOT_MATCH);
         }
         commentRepository.deleteById(commentId);
     }
@@ -85,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
         Comment commentFromDb = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(Constants.COMMENT_NOT_FOUND));
         if (!commentFromDb.getEvent().getId().equals(eventId)) {
-            throw new ConflictException(Constants.COMMENT_EVENT_NOT_MATCH);
+            throw new NotFoundException(Constants.COMMENT_EVENT_NOT_MATCH);
         }
         commentRepository.deleteById(commentId);
     }
@@ -95,7 +95,7 @@ public class CommentServiceImpl implements CommentService {
         Comment commentFromDb = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(Constants.COMMENT_NOT_FOUND));
         if (!commentFromDb.getEvent().getId().equals(eventId)) {
-            throw new ConflictException(Constants.COMMENT_EVENT_NOT_MATCH);
+            throw new NotFoundException(Constants.COMMENT_EVENT_NOT_MATCH);
         }
         return commentMapper.toGetCommentDto(commentFromDb);
     }
