@@ -23,6 +23,8 @@ import ru.practicum.main.service.user.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.practicum.main.service.event.enums.EventState.PUBLISHED;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -40,6 +42,9 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND));
         Event commentEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(Constants.EVENT_NOT_FOUND));
+        if (!commentEvent.getState().equals(PUBLISHED)) {
+            throw new ConflictException("Событие ещё не опубликовано eventId=" + eventId);
+        }
         Comment comment = commentMapper.toComment(commentDto);
         comment.setAuthor(commentAuthor);
         comment.setEvent(commentEvent);

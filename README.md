@@ -95,6 +95,24 @@ POST `/users/{userId}/events/{eventId}/comment`
 </p>
 </details>
 
+- Code `409` - событие ещё не опубликовано
+
+<details>
+  <summary>Пример ответа</summary>
+<p>
+
+```JSON
+{
+  "status": "FORBIDDEN",
+  "reason": "For the requested operation the conditions are not met.",
+  "message": "It is allowed to add the comment to only PUBLISHED event.",
+  "timestamp": "2022-09-07 09:10:50"
+}
+```
+
+</p>
+</details>
+
 ------------
 
 ### PATCH
@@ -211,12 +229,10 @@ DELETE `/users/{userId}/events/{eventId}/comments/{commentId}`
 - Code `204` - комментарий удалён
 
 <details>
-  <summary>Пример ответа</summary>
+  <summary>Пример ответа (NO_CONTENT)</summary>
 <p>
 
 ```JSON
-{
-}
 ```
 
 </p>
@@ -274,12 +290,10 @@ DELETE `/admin/events/{eventId}/comments/{commentId}`
 - Code `204` - комментарий удалён
 
 <details>
-  <summary>Пример ответа</summary>
+  <summary>Пример ответа (NO_CONTENT)</summary>
 <p>
 
 ```JSON
-{
-}
 ```
 
 </p>
@@ -499,7 +513,7 @@ GET `events/{eventId}/comments`
 - `text` (string) - текст комментария
 - `created` (string) - дата и время создания комментария (в формате "yyyy-MM-dd HH:mm:ss")
 - `eventId` ($int64) - id комментируемого события
-- `UserShortDto` - краткая информация об авторе комментария:
+- `author` (UserShortDto) - краткая информация об авторе комментария:
     - id ($int64) - id пользователя
     - name (string) - имя пользователя
 
