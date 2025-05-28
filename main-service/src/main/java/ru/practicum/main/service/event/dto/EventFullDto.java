@@ -9,11 +9,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.main.service.category.dto.CategoryDto;
+import ru.practicum.main.service.comment.dto.GetCommentDto;
 import ru.practicum.main.service.event.enums.EventState;
 import ru.practicum.main.service.event.model.Location;
 import ru.practicum.main.service.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.practicum.main.service.Constants.DATE_PATTERN;
 
@@ -63,4 +66,6 @@ public class EventFullDto implements ResponseEvent {
     private EventState state;
 
     private long views;
+
+    private List<GetCommentDto> comments = new ArrayList<>();
 }
