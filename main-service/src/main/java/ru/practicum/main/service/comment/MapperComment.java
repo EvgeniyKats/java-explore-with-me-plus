@@ -14,4 +14,6 @@ public interface MapperComment {
     GetCommentDto toCommentDto(Comment comment);
 
     Comment toComment(CommentDto commentDto);
+
+    GetCommentDto toGetCommentDto(Comment comment);
 }
