@@ -27,7 +27,7 @@
 
 #### Создание комментария, доступно только пользователям:
 
-POST `/users/{userId}/events{eventId}/comment`
+POST `/users/{userId}/events/{eventId}/comment`
 
 **Параметры**:
 
@@ -105,7 +105,7 @@ POST `/users/{userId}/events{eventId}/comment`
 
 - Комментарий может быть обновлен в течение 24 часов после создания
 
-PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
+PATCH `/users/{userId}/events/{eventId}/comments/{commentId}`
 
 **Параметры**:
 
@@ -156,7 +156,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найден пользователь, событие или комментарий
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -166,7 +166,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -198,7 +198,7 @@ PATCH `/users/{userId}/events{eventId}/comments/{commentId}`
 
 #### Удаление комментария пользователем:
 
-DELETE `/users/{userId}/events{eventId}/comments/{commentId}`
+DELETE `/users/{userId}/events/{eventId}/comments/{commentId}`
 
 **Параметры**:
 
@@ -240,7 +240,7 @@ DELETE `/users/{userId}/events{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найден пользователь, событие или комментарий
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -250,7 +250,7 @@ DELETE `/users/{userId}/events{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -303,7 +303,7 @@ DELETE `/admin/events/{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найдено событие или комментарий
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -313,7 +313,7 @@ DELETE `/admin/events/{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -376,7 +376,7 @@ GET `events/{eventId}/comments/{commentId}`
 </p>
 </details>
 
-- Code `404` - не найдено событие
+- Code `404` - не найден комментарий по указанному пути
 
 <details>
   <summary>Пример ответа</summary>
@@ -386,7 +386,7 @@ GET `events/{eventId}/comments/{commentId}`
 {
   "status": "NOT_FOUND",
   "reason": "The required object was not found.",
-  "message": "Event with id=13 was not found",
+  "message": "Comment not found",
   "timestamp": "2022-09-07 09:10:50"
 }
 ```
@@ -394,7 +394,7 @@ GET `events/{eventId}/comments/{commentId}`
 </p>
 </details>
 
-#### Получение всех комментариев события (публичный API)
+#### Получение нескольких комментариев события (публичный API)
 
 GET `events/{eventId}/comments`
 
