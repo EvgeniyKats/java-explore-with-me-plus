@@ -7,9 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.main.service.category.dto.CategoryDto;
+import ru.practicum.main.service.comment.dto.GetCommentDto;
 import ru.practicum.main.service.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.practicum.main.service.Constants.DATE_PATTERN;
 
@@ -43,4 +46,6 @@ public class EventShortDto implements ResponseEvent {
 
     @JsonIgnore
     private int participantLimit;
+
+    private List<GetCommentDto> comments = new ArrayList<>();
 }
